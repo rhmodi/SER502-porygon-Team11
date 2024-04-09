@@ -1,1 +1,7 @@
 Contribution from team
+
+Design Document
+
+Grammar upto bool
+Team discussion
+Loops, ternary, special characters, operations - Kaumudi Gulbarga Degekar, Rakshilkumar Modi.
