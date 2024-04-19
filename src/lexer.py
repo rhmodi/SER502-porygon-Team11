@@ -71,8 +71,6 @@ class PgonLexer(Lexer):
     MOD_SHORTHAND = r'%='
     EXP_SHORTHAND = r'^='
 
-
-
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description='Porygon Lexer - Converts the Porygon source code into a list of tokens and saves it as '
@@ -99,9 +97,8 @@ def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
         allTokens = []
         for token in tokens:
-            allTokens.append(token.value)
-        print("Tokens",allTokens)
-        file.write('{}'.format(allTokens))
+            file.write('{}\n'.format(token.value))
+        
         print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
               'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
 

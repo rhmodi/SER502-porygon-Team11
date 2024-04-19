@@ -1,0 +1,5 @@
+{
+    int a = 25;
+    float b = 36.0;
+    print(a);
+}
