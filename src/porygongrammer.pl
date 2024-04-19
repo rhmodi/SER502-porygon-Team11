@@ -60,8 +60,8 @@ ifelsecommand(If,Else):- ifpart(If),elsepart(Else).
 ifELseLaddercommand(If,Elif,Else):- ifpart(If),elseifpart(Elif),elsepart(Else).
 
 ifpart(if(B,X)):- ['if'],['('],boolcondition(B), [')'],['{'],commandlist(X),['}'].
-elseifpart(elseif(B,E1,E2)):- ['else if'],['('],boolcondition(B), [')'],['{'],commandlist(E1),['}'],elseifpart(E2). 
-elseifpart(elseif(B,E)):- ['else if'],['('],boolcondition(B), [')'],['{'],commandlist(E),['}'].
+elseifpart(elseif(B,E1,E2)):- ['elif'],['('],boolcondition(B), [')'],['{'],commandlist(E1),['}'],elseifpart(E2). 
+elseifpart(elseif(B,E)):- ['elif'],['('],boolcondition(B), [')'],['{'],commandlist(E),['}'].
 elsepart(else(C)):- ['else'],['{'],commandlist(C),['}'].
 
 
