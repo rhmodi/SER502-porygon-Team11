@@ -110,13 +110,13 @@ if __name__ == '__main__':
     input_filename = parsed_args.input[0]
     # print("Input file",input_filename)
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
-    print("Output file",output_filename)
+    # print("Output file",output_filename)
     file_data = read_input_file(input_filename)
-    print("File Data", file_data)
+    # print("File Data", file_data)
     lexer = PgonLexer()
-    print("LExer",lexer)
+    # print("LExer",lexer)
     tokens = lexer.tokenize(file_data)
-    print("Tokens",tokens)
+    # print("Tokens",tokens)
     write_tokens_to_file(tokens, output_filename)
 
     should_evaluate = parsed_args.evaluate
