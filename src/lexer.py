@@ -55,8 +55,8 @@ class PgonLexer(Lexer):
     ID['range'] = RANGE
     ID['print'] = PRINT
     ID['strlen'] = STRLEN
-    FLOAT = r'\d+(\.\d+)?'
-    NUMBER = r'\d+'
+    # FLOAT = r'\d+(\.\d+)?'
+    # NUMBER = r'\d+'
     STRING = r'\".*\"'
     INC = r'\+\+'
     DEC = r'--'
@@ -70,6 +70,19 @@ class PgonLexer(Lexer):
     DIV_SHORTHAND = r'/='
     MOD_SHORTHAND = r'%='
     EXP_SHORTHAND = r'^='
+
+    @_(r'\d+\.\d*') # Regex if decimal point is not there FLOAT SHOULD BE ENDING WITH '.'
+    def FLOAT(self, t):
+        t.value = float(t.value)
+        return t
+
+    # Match integers
+    @_(r'\d+')
+    def NUMBER(self, t):
+        t.value = int(t.value)
+        return t
+
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -95,10 +108,10 @@ def read_input_file(filename):
 
 def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
-        token_values = [token.value for token in tokens]
-        file.write("[")
-        file.write(", ".join(token_values))
-        file.write("]\n")
+        allTokens = []
+        for token in tokens:
+            allTokens.append(token.value)
+        file.write('{}'.format(allTokens))
         
         print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
               'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
@@ -107,7 +120,7 @@ def write_tokens_to_file(tokens, filename):
 if __name__ == '__main__':
     print(Constants.PRINT_YELLOW_TEXT + "Starting Lexer" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
-
+    print(parsed_args)
     input_filename = parsed_args.input[0]
     # print("Input file",input_filename)
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
