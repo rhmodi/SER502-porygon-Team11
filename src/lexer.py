@@ -95,9 +95,10 @@ def read_input_file(filename):
 
 def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
-        allTokens = []
-        for token in tokens:
-            file.write('{}\n'.format(token.value))
+        token_values = [token.value for token in tokens]
+        file.write("[")
+        file.write(", ".join(token_values))
+        file.write("]\n")
         
         print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
               'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
