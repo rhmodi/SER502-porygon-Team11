@@ -30,7 +30,7 @@ class PgonLexer(Lexer):
     ignore_comment = r'\#(.*)'
 
     # TOKENS
-    FLOAT = r'\d+(\.\d+)?'
+    # Identifiers and Keywords
     ID = r'[a-z][a-zA-Z0-9_]*[a-zA-Z0-9]*'
     ID['const'] = CONST
     ID['int'] = INT
@@ -55,6 +55,7 @@ class PgonLexer(Lexer):
     ID['range'] = RANGE
     ID['print'] = PRINT
     ID['strlen'] = STRLEN
+    FLOAT = r'\d+(\.\d+)?'
     NUMBER = r'\d+'
     STRING = r'\".*\"'
     INC = r'\+\+'
