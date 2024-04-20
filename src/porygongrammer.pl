@@ -1,4 +1,4 @@
-block(block(D,E))--> ['{'],decl(D),commd(C),['}'].
+block(blck(D,E))--> ['{'],decl(D),commd(C),['}'].
 
 decl(dec(D,DL))--> decls(D),[';'],decl(DL).
 decl(dec(D)) --> decls(D),[';'].
@@ -34,18 +34,23 @@ assignment(assign(A))--> initialAssignment(A).
 assignment(assign(A))--> declassign(A).
 assignment(assign(A))--> shortantAssign(A).
 
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['-='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['*='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['/='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['%='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['^='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['-='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['*='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['/='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['%='],expr(Expr).
+shortantAssign(sassign(Var,Expr))--> variablename(Var),['^='],expr(Expr).
 
 
 initialAssignment(iassign(Var,Expr))--> variablename(Var),['='],expr(Expr).
 
 
 % Complete other expression
+
+
+
+
+
 
 
 %%%% IF COMMANDS%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,31 +69,31 @@ elsepart(else(C))--> ['else'],['{'],commandlist(C),['}'].
 
 
 % Change in grammer make it left recursive
-expr(addition(X,Y))--> expr(X),['+'],term(Y).
-expr(subtraction(X,Y))--> expr(X),['-'],term(Y).
+expr(add(X,Y))--> expr(X),['+'],term(Y).
+expr(sub(X,Y))--> expr(X),['-'],term(Y).
 expr(X)--> term(X).
 
-term(multiplication(X,Y))--> term(X),['*'],factor(Y).
-term(division(X,Y))--> term(X),['/'],factor(Y).
-term(modulus(X,Y))--> term(X),['%'],factor(Y).
+term(mult(X,Y))--> term(X),['*'],factor(Y).
+term(divi(X,Y))--> term(X),['/'],factor(Y).
+term(modulo(X,Y))--> term(X),['%'],factor(Y).
 term(X)--> factor(X).
 
-factor(exponent(X,Y))--> factor(X),['^'],exponent(Y).
+factor(expo(X,Y))--> factor(X),['^'],exponent(Y).
 factor(X)--> exponent(X).
 
-exponent(Square)--> square(Square).
-exponent(Squareroot)--> squareRoot(Squareroot).
-exponent(Cube)--> cube(Cube).
-exponent(Cuberoot)--> cubeRoot(Cuberoot).
+exponent(S)--> square(S).
+exponent(Sr)--> squareRoot(Sr).
+exponent(C)--> cube(C).
+exponent(Cr)--> cubeRoot(Cr).
 exponent(X)--> ['('],expr(X),[')'].
-exponent(InitAssign)--> initialassignment(InitAssign).
+exponent(A)--> initialAssignment(A).
 exponent(Var)--> variablename(Var).
-exponent(Num)--> num(Num).
+exponent(N)--> num(N).
 
-square(sq(Sq))--> ['sq'],['('],expr(Sq),[')'].
-squareRoot(sqrt(Sqrt))--> ['sqrt'],['('],expr(Sqrt),[')'].
-cube(cube(Cube))--> ['cube'],['('],expr(Cube),[')'].
-cubeRoot(cbrt(Cbrt))--> ['cbrt'],['('],expr(Cbrt),[')'].
+square(sq(S))--> ['sq'],['('],expr(S),[')'].
+squareRoot(sqrt(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
+cube(cube(C))--> ['cube'],['('],expr(C),[')'].
+cubeRoot(cbrt(S))--> ['cbrt'],['('],expr(S),[')'].
 
 
 
