@@ -53,30 +53,30 @@ plaincommand(plain(ForInRange)) --> forinrangecommand(ForInRange).
 % Declaration of types of assignment
 assignment(assign(A))--> initialassignment(A).
 assignment(assign(A))--> declassign(A).
-assignment(assign(A))--> shortantAssign(A).
+assignment(assign(A))--> shorthandAssign(A).
 
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['-='],expr(Expr).
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['*='],expr(Expr).
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['/='],expr(Expr).
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['%='],expr(Expr).
-shortantAssign(sassign(Var,Expr))--> variablename(Var),['^='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['-='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['*='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['/='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['%='],expr(Expr).
+shorthandAssign(shassign(Var,Expr))--> variablename(Var),['^='],expr(Expr).
 
 initialassignment(iassign(Var,Expr))--> variablename(Var),['='],expr(Expr)
 
 % EXPRESSIONS STARTS HERE
 
 % Change in grammer make it left recursive
-expr(add(X,Y))--> expr(X),['+'],term(Y).
-expr(sub(X,Y))--> expr(X),['-'],term(Y).
+expr(addition(X,Y))--> expr(X),['+'],term(Y).
+expr(subtraction(X,Y))--> expr(X),['-'],term(Y).
 expr(X)--> term(X).
 
-term(mult(X,Y))--> term(X),['*'],factor(Y).
-term(divi(X,Y))--> term(X),['/'],factor(Y).
-term(modulo(X,Y))--> term(X),['%'],factor(Y).
+term(multiplication(X,Y))--> term(X),['*'],factor(Y).
+term(division(X,Y))--> term(X),['/'],factor(Y).
+term(modulus(X,Y))--> term(X),['%'],factor(Y).
 term(X)--> factor(X).
 
-factor(expo(X,Y))--> factor(X),['^'],exponent(Y).
+factor(exponent(X,Y))--> factor(X),['^'],exponent(Y).
 factor(X)--> exponent(X).
 
 exponent(S)--> square(S).
@@ -84,14 +84,14 @@ exponent(Sr)--> squareRoot(Sr).
 exponent(C)--> cube(C).
 exponent(Cr)--> cubeRoot(Cr).
 exponent(X)--> ['('],expr(X),[')'].
-exponent(A)--> initialAssignment(A).
+exponent(A)--> initialassignment(A).
 exponent(Var)--> variablename(Var).
 exponent(N)--> num(N).
 
-square(sq(S))--> ['sq'],['('],expr(S),[')'].
-squareRoot(sqrt(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
+square(square(S))--> ['sq'],['('],expr(S),[')'].
+squareRoot(squareroot(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
 cube(cube(C))--> ['cube'],['('],expr(C),[')'].
-cubeRoot(cbrt(S))--> ['cbrt'],['('],expr(S),[')'].
+cubeRoot(cuberoot(S))--> ['cbrt'],['('],expr(S),[')'].
 
 %Boolean Expressions start here including logical operators 'and', 'or', 'not'.
 
