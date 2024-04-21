@@ -127,7 +127,7 @@ elsepart(else(C))--> ['else'],['{'],commandlist(C),['}'].
 whilecommand(Condition)--> ['while'],['('],boolcondition(Condition), [')'],['{'],commandlist(C),['}'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-for_command(For)--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Varupdation),[')'],['{'],commandlist(C),['}'].
+forcommand(For)--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Varupdation),[')'],['{'],commandlist(C),['}'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variableupdation(increment(Ops))--> increment_operation(Ops).
