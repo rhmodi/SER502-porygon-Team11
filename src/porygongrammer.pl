@@ -158,6 +158,7 @@ strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 stringvalue(string(Str))--> ['"'],alphanumeric(Str),['"'].
+stringvalue(string(Str))--> ['\"'],['\"'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 floatvalue(float(Flt))--> num(Num),'.',num(Num2).
@@ -167,3 +168,31 @@ floatvalue(float(Flt))--> num(Num).
 boolvalue(bool(Bool))--> ['true'].
 boolvalue(bool(Bool))--> ['false'].
 boolvalue(bool(Bool))-->  num(Bool). % 0 for false and 1 for true (check this again).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A SPECIAL CHARACTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%% VAR NAME CAN BE ALPHANUMERIC AND CAN CONTAIN UNDERSCORE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+variablename(var(Var)) --> lowercase_letter(Var).
+variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, lowercase_letter(Var).
+variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, uppercase_letter(Var).
+variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, digit(Var).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
+alphanumeric(Alpha) --> character(Alpha).
+character(Char) --> letter(Char).
+character(Char) --> num(Char).
+character(Char) --> special_char(Char).
+
+num(number(Num)) --> digit(Num), num(Num).
+num(number(Num)) --> digit(Num).
+
+letter(Letter) --> lowercase_letter(Letter).
+letter(Letter) --> uppercase_letter(Letter).
+lowercase_letter(Lower) --> ['a'];['b'];['c'];['d'];['e'];['f'];['g'];['h'];['i'];['j'];['k'];['l'];['m'];['n'];['o'];['p'];['q'];['r'];['s'];['t'];['u'];['v'];['w'];['x'];['y'];['z'].
+uppercase_letter(Upper) --> ['A'];['B'];['C'];['D'];['E'];['F'];['G'];['H'];['I'];['J'];['K'];['L'];['M'];['N'];['O'];['P'];['Q'];['R'];['S'];['T'];['U'];['V'];['W'];['X'];['Y'];['Z'].
+digit(Digit) --> ['0'];['1'];['2'];['3'];['4'];['5'];['6'];['7'];['8'];['9'].
+special_char(Special) --> ['!'];['@'];['#'];['$'];['%'];['^'];['&'];['*'];['('];[')'];['_'];['-'];['+'];['='];['{'];['}'];['['];[']'];['|'];[':'];[';'];['"'];['<'];['>'];[','];['.'];['?'];['/'].
