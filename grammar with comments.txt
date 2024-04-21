@@ -44,7 +44,7 @@ Plain_declaration ::= 'int' Variable_name
 	
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMMANDS BLOCK %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Commands can be multi line or single line, and it but multiple
+% Commands can be multi line or single lne, and it but multiple
 % We are using Assignment, ternary operator, print command, string length, just if command, if else command, if else ladder command, while,for for in range.
 
 % Out of which Assignment, ternary operator, print command, string length this are single line commands ending with semicolon
@@ -123,6 +123,7 @@ Condition ::= 'not', Bool_condition
 	| Expression, '>', Expression
 	| Expression, '<=', Expression
 	| Expression, '>=', Expression
+	| Expression, '!=', Expression
 	| Bool_value.
 
 
@@ -132,8 +133,8 @@ If_else_command :- If_part, Else_part.
 If_else_ladder_command :- If_part, Elseif_part, Else_part.
 
 If_part :- 'if','(',Bool_condition,')','{',CommandList,'}' .
-Elseif_part :- 'else if', '(',Bool_condition,')' ,'{',CommandList,'}', Elseif_part.
-Elseif_part :- 'else if', '(',Bool_condition,')' ,'{',CommandList,'}'.
+Elseif_part :- 'elseif', '(',Bool_condition,')' ,'{',CommandList,'}', Elseif_part.
+Elseif_part :- 'elseif', '(',Bool_condition,')' ,'{',CommandList,'}'.
 Else :- 'else' ,'{',CommandList,'}'.
 
 
@@ -181,7 +182,7 @@ Print ::= 'print','(',Expression,')'.
 String_length ::= 'length','(',String_Value,')'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE SHOULD be with double qoutes and can be alphanumeric %%%%%%%%%%%%%%%%%%%%%%
-String_Value ::= '\"',Alphanumeric,'\"'.		
+String_Value ::= '\"',Alphanumeric,'\"' | '\"\"' .		
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Float Values can be decimal as well as integers %%%%%%%%%%%%%%%%%%%%% 
 Float_value ::= Numbers,'.', Numbers 
