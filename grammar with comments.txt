@@ -182,8 +182,7 @@ Print ::= 'print','(',Expression,')'.
 String_length ::= 'length','(',String_Value,')'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE SHOULD be with double qoutes and can be alphanumeric %%%%%%%%%%%%%%%%%%%%%%
-String_Value ::= '\"',Alphanumeric,'\"'. 
-					|| '\"\"'.		
+String_Value ::= '\"',Alphanumeric,'\"' | '\"\"' .		
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Float Values can be decimal as well as integers %%%%%%%%%%%%%%%%%%%%% 
 Float_value ::= Numbers,'.', Numbers 
