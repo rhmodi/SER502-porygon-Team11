@@ -142,6 +142,28 @@ decrement_operation(decrement(Var)) --> variablename(Var),['--'].
 decrement_operation(decrement(Var)) --> ['--'],variablename(Var).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR IN RANGE STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-forinrangecommand(For)--> ['for'],['('],assignment(Assign),['in'],range(Range),[')'],['{'],commandlist(C),['}'].
+forinrangecommand(For)--> ['for'],variablename(Var),['in'],['range'],['('], range(Range),',',range(Range),',',range(Range),[')'],['{'],commandlist(C),['}'].
+range(Range)--> variablename(Range).
+range(Range)--> num(Range).
 
+%%%%%%%%%%%%check before pushing%%%%%%%%%%%%%% Terenary Statement%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ternary(ternary(Bool,Expr1,Expr2))-->['('], boolcondition(Bool),[')'],['?'],expr(Expr1),[':'],expr(Expr2).
+ternary(ternary(Bool,Expr1,Expr2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRINT STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING LENGTH STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+stringvalue(string(Str))--> ['"'],alphanumeric(Str),['"'].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+floatvalue(float(Flt))--> num(Num),'.',num(Num2).
+floatvalue(float(Flt))--> num(Num).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+boolvalue(bool(Bool))--> ['true'].
+boolvalue(bool(Bool))--> ['false'].
+boolvalue(bool(Bool))-->  num(Bool). % 0 for false and 1 for true (check this again).
