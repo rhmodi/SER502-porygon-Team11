@@ -31,7 +31,7 @@ class PgonLexer(Lexer):
 
     # TOKENS
     # Identifiers and Keywords
-    ID = r'[a-z][a-zA-Z0-9_]*[a-zA-Z0-9]*'
+    ID = r'[a-z]([a-zA-Z0-9_]*[a-zA-Z0-9]+)?'
     ID['const'] = CONST
     ID['int'] = INT
     ID['string'] = STRING_KEYWORD

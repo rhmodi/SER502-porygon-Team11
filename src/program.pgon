@@ -1,5 +1,5 @@
 {
-    int a = 25;
+    int rad_0= 25;
     float b = 36.0;
     print(a);
 }
