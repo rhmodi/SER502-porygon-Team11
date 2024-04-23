@@ -143,7 +143,7 @@ forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variableupdation(increment(Ops))--> increment_operation(Ops).
 variableupdation(decrement(Ops))--> decrement_operation(Ops).
-variableupdation(assignment(Assign))--> expr(Assign).
+variableupdation(assignment(Assign))--> assignment(Assign).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% increment and decrement operations%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 increment_operation(increment(Var)) --> variablename(Var),['++'].
@@ -178,7 +178,7 @@ floatvalue(N)--> num(N).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 boolvalue(bool(true))--> ['true'].
 boolvalue(bool(false))--> ['false'].
-boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
+%boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,6 +187,7 @@ boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variablename(var(Atom)) -->
     [Atom],
+    {\+ member(Atom, ['const','int','string','float','bool','true','false','if','elif','else', 'for', 'in','range','while'])},
     { atom_chars(Atom, [First|RestChars]) },
     { code_type(First, lower) },
     {restOfVariableName(RestChars)}.
