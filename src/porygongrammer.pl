@@ -22,10 +22,9 @@ constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr
 constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
 constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],num(Value).
+
 declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
 declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),['='],floatvalue(Value).
 declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
 declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
 declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
