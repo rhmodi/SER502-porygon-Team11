@@ -44,6 +44,9 @@ print(c);
 
     print(c);
 
+    a = (b>c)?(a++):false;
+
+    print(a+b+c);
 
 
 }
