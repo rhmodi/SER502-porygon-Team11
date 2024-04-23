@@ -95,6 +95,10 @@ exponent(X)--> ['('],expr(X),[')'].
 exponent(A)--> initialassignment(A).
 exponent(Var)--> variablename(Var).
 exponent(N)--> num(N).
+exponent(T) --> ternary(T).
+exponent(B) --> boolvalue(B).
+exponent(I)--> increment_operation(I).
+exponent(Dec)--> decrement_operation(Dec).
 
 square(square(S))--> ['sq'],['('],expr(S),[')'].
 squareRoot(squareroot(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
@@ -155,7 +159,7 @@ range(Range)--> num(Range).
 
 %%%%%%%%%%%%check before pushing%%%%%%%%%%%%%% Terenary Statement%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ternary(ternary(Bool,Expr1,Expr2))-->['('], boolcondition(Bool),[')'],['?'],expr(Expr1),[':'],expr(Expr2).
-ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
+%ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRINT STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
