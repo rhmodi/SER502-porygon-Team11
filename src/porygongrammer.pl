@@ -60,7 +60,7 @@ blockcommand(blkcmd(ForInRange)) --> forinrangecommand(ForInRange).
 
 % Declaration of types of assignment
 assignment(assign(A))--> initialassignment(A).
-assignment(assign(A))--> declassign(A).
+%assignment(assign(A))--> declassign(A).
 assignment(assign(A))--> shorthandAssign(A).
 
 shorthandAssign(shassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
@@ -135,7 +135,7 @@ whilecommand(while(Condition,C))--> ['while'],['('],boolcondition(Condition), ['
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
-
+forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variableupdation(increment(Ops))--> increment_operation(Ops).
 variableupdation(decrement(Ops))--> decrement_operation(Ops).

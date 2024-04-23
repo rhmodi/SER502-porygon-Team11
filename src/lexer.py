@@ -65,11 +65,11 @@ class PgonLexer(Lexer):
     LE = r'<='
     NE = r'!='
     ADD_SHORTHAND = r'\+='
-    SUB_SHORTHAND = r'-='
+    SUB_SHORTHAND = r'\-='
     MUL_SHORTHAND = r'\*='
-    DIV_SHORTHAND = r'/='
-    MOD_SHORTHAND = r'%='
-    EXP_SHORTHAND = r'^='
+    DIV_SHORTHAND = r'\/='
+    MOD_SHORTHAND = r'\%='
+    EXP_SHORTHAND = r'\^='
 
     @_(r'\d+\.\d*') # Regex if decimal point is not there FLOAT SHOULD BE ENDING WITH '.'
     def FLOAT(self, t):
