@@ -143,7 +143,7 @@ decrement_operation(decrement(Var)) --> variablename(Var),['--'].
 decrement_operation(decrement(Var)) --> ['--'],variablename(Var).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR IN RANGE STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-forinrangecommand(forinrange(Var,SR,ER,C))--> ['for'],variablename(Var),['in'],['range'],['('], range(SR),',',range(ER),[')'],['{'],commandlist(C),['}'].
+forinrangecommand(forinrange(Var,SR,ER,C))--> ['for'],variablename(Var),['in'],['range'],['('], range(SR),[','],range(ER),[')'],['{'],commandlist(C),['}'].
 range(Range)--> variablename(Range).
 range(Range)--> num(Range).
 
