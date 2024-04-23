@@ -1,6 +1,7 @@
 {
-    int  25;
+    int a = 25;
     float  = 36.0;
-    print(a);
     string s = "Raks";
+    print(a);
+   
 }

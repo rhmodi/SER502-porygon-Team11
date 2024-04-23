@@ -155,10 +155,10 @@ ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING LENGTH STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-strlen(stringlength(Strlen)) --> ['strlen'],['('],Strlen,[')'].
+strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stringvalue((Str))--> ['"'],alphanumeric(Str),['"'].
+stringvalue((Str))--> [Str].
 %stringvalue(string(Str))--> ['\"'],['\"'].
 % LEXER is handling it 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
