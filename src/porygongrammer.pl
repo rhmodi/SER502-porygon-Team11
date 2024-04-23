@@ -163,8 +163,8 @@ stringvalue((Str))--> ['"'],alphanumeric(Str),['"'].
 %stringvalue(string(Str))--> ['\"'],['\"'].
 % LEXER is handling it 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-floatvalue(float(Num,Num2))--> num(Num),['.'],num(Num2).
-floatvalue(float(Flt))--> num(Flt).
+
+floatvalue(N)--> num(N).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 boolvalue(bool(true))--> ['true'].
