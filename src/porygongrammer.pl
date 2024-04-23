@@ -1,4 +1,5 @@
-
+:- use_rendering(svgtree).
+:- table expr/3,factor/3,term/3.
 
 %Programming block begins here
 block(block(D,E))--> ['{'],decl(D),commandlist(E),['}'].
@@ -184,7 +185,7 @@ variablename(var(Atom)) -->
 restOfVariableName([Char|Rest]):-
     code_type(Char, alnum); Char == '_',
     restOfVariableName(Rest).
-restOfVariableName([]) :- [].
+restOfVariableName([]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
