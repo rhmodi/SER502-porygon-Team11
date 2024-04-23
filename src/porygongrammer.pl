@@ -46,6 +46,8 @@ plaincommand(plain(Assign)) --> assignment(Assign).
 plaincommand(plain(Ternary)) --> ternary(Ternary).
 plaincommand(plain(Print)) --> printStmt(Print).
 plaincommand(plain(StrLen)) --> strlen(StrLen).
+plaincommand(plain(Value)) -->increment_operation(Value).
+plaincommand(plain(Value)) -->decrement_operation(Value).
 
 %Separeted syntax structures which need {} so that they do not need ; too.
 blockcommand(blkcmd(If)) --> ifcommand(If).
