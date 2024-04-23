@@ -175,7 +175,17 @@ boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A SPECIAL CHARACTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%% VAR NAME CAN BE ALPHANUMERIC AND CAN CONTAIN UNDERSCORE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-variablename(var(C))-->[C].
+variablename(var(Atom)) -->
+    [Atom],
+    { atom_chars(Atom, [First|RestChars]) },
+    { code_type(First, lower) },
+    {restOfVariableName(RestChars)}.
+
+restOfVariableName([Char|Rest]):-
+    code_type(Char, alnum); Char == '_',
+    restOfVariableName(Rest).
+restOfVariableName([]) :- [].
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
