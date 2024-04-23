@@ -1,5 +1,6 @@
 {
-    int rad_0= 25;
-    float b = 36.0;
+    int  25;
+    float  = 36.0;
     print(a);
+    string s = "Raks";
 }

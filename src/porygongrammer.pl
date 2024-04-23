@@ -155,20 +155,20 @@ ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING LENGTH STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
+strlen(stringlength(Strlen)) --> ['strlen'],['('],Strlen,[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stringvalue(string(Str))--> ['"'],alphanumeric(Str),['"'].
-stringvalue(string(Str))--> ['\"'],['\"'].
-
+stringvalue((Str))--> ['"'],alphanumeric(Str),['"'].
+%stringvalue(string(Str))--> ['\"'],['\"'].
+% LEXER is handling it 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-floatvalue(float(Flt))--> num(Num),'.',num(Num2).
-floatvalue(float(Flt))--> num(Num).
+floatvalue(float(Num,Num2))--> num(Num),['.'],num(Num2).
+floatvalue(float(Flt))--> num(Flt).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-boolvalue(bool(Bool))--> ['true'].
-boolvalue(bool(Bool))--> ['false'].
-boolvalue(bool(Bool))-->  num(Bool). % 0 for false and 1 for true (check this again).
+boolvalue(bool(true))--> ['true'].
+boolvalue(bool(false))--> ['false'].
+boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
