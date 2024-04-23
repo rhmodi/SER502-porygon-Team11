@@ -1,4 +1,5 @@
-
+:- use_rendering(svgtree).
+:- table expr/3,factor/3,term/3.
 
 %Programming block begins here
 block(block(D,E))--> ['{'],decl(D),commandlist(E),['}'].
@@ -12,23 +13,22 @@ decls(D)--> constassign(D).
 decls(D)--> declassign(D).
 decls(D)--> plainassign(D).
 
-constassign(const(C,N)) --> ['const'], ['int'], variablename(C),[=],num(N).
-constassign(const(C,S)) --> ['const'], ['string'], variablename(C),[=],stringvalue(S).
-constassign(const(C,BE)) --> ['const'], ['bool'], variablename(C),[=],boolvalue(BE).
-constassign(const(C,F)) --> ['const'], ['float'], variablename(C),[=],floatvalue(F).
-constassign(const(C,Expr)) --> ['const'], ['int'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),[=],expr(Expr).
+constassign(const(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
+constassign(const(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
+constassign(const(C,BE)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(BE).
+constassign(const(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
+constassign(const(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),[=],num(Value).
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),[=],stringvalue(Value).
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),[=],boolvalue(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),[=],floatvalue(Value).
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),[=],expr(Value).
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),[=],expr(Value). 
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),[=],expr(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),[=],expr(Value).
+
+declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
+declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
+declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
+declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
+declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
+declassign(declaration(Var,Value)) --> ['float'], variablename(Var),['='],expr(Value).
 
 plainassign(plaindeclaration(Var)) --> ['int'], variablename(Var).
 plainassign(plaindeclaration(Var)) --> ['string'], variablename(Var).
@@ -143,7 +143,7 @@ decrement_operation(decrement(Var)) --> variablename(Var),['--'].
 decrement_operation(decrement(Var)) --> ['--'],variablename(Var).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR IN RANGE STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-forinrangecommand(forinrange(Var,SR,ER,C))--> ['for'],variablename(Var),['in'],['range'],['('], range(SR),',',range(ER),[')'],['{'],commandlist(C),['}'].
+forinrangecommand(forinrange(Var,SR,ER,C))--> ['for'],variablename(Var),['in'],['range'],['('], range(SR),[','],range(ER),[')'],['{'],commandlist(C),['}'].
 range(Range)--> variablename(Range).
 range(Range)--> num(Range).
 
@@ -158,28 +158,34 @@ printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
 strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stringvalue(string(Str))--> ['"'],alphanumeric(Str),['"'].
-stringvalue(string(Str))--> ['\"'],['\"'].
-
+stringvalue((Str))--> [Str].
+%stringvalue(string(Str))--> ['\"'],['\"'].
+% LEXER is handling it 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-floatvalue(float(Flt))--> num(Num),'.',num(Num2).
-floatvalue(float(Flt))--> num(Num).
+
+floatvalue(N)--> num(N).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-boolvalue(bool(Bool))--> ['true'].
-boolvalue(bool(Bool))--> ['false'].
-boolvalue(bool(Bool))-->  num(Bool). % 0 for false and 1 for true (check this again).
+boolvalue(bool(true))--> ['true'].
+boolvalue(bool(false))--> ['false'].
+boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A SPECIAL CHARACTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%% VAR NAME CAN BE ALPHANUMERIC AND CAN CONTAIN UNDERSCORE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+variablename(var(Atom)) -->
+    [Atom],
+    { atom_chars(Atom, [First|RestChars]) },
+    { code_type(First, lower) },
+    {restOfVariableName(RestChars)}.
 
-variablename(var(Var)) --> lowercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, lowercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, uppercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, digit(Var).
+restOfVariableName([Char|Rest]):-
+    code_type(Char, alnum); Char == '_',
+    restOfVariableName(Rest).
+restOfVariableName([]).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
@@ -188,13 +194,11 @@ character(Char) --> letter(Char).
 character(Char) --> num(Char).
 character(Char) --> special_char(Char).
 
-num(number(Num)) --> digit(Num), num(Num).
-num(number(Num)) --> digit(Num).
+num(num(Num)) --> [Num],{number(Num)}.
 
-letter(Letter) --> lowercase_letter(Letter).
-letter(Letter) --> uppercase_letter(Letter).
-lowercase_letter(A)-->['a'], {A is 'a'}.
-lowercase_letter(Lower) --> ['a'];['b'];['c'];['d'];['e'];['f'];['g'];['h'];['i'];['j'];['k'];['l'];['m'];['n'];['o'];['p'];['q'];['r'];['s'];['t'];['u'];['v'];['w'];['x'];['y'];['z'].
-uppercase_letter(Upper) --> ['A'];['B'];['C'];['D'];['E'];['F'];['G'];['H'];['I'];['J'];['K'];['L'];['M'];['N'];['O'];['P'];['Q'];['R'];['S'];['T'];['U'];['V'];['W'];['X'];['Y'];['Z'].
-digit(Digit) --> ['0'];['1'];['2'];['3'];['4'];['5'];['6'];['7'];['8'];['9'].
-special_char(Special) --> ['!'];['@'];['#'];['$'];['%'];['^'];['&'];['*'];['('];[')'];['_'];['-'];['+'];['='];['{'];['}'];['['];[']'];['|'];[':'];[';'];['"'];['<'];['>'];[','];['.'];['?'];['/'].
+letter(Letter) --> [Letter],lowercase_letter(Letter).
+letter(Letter) --> [Letter],uppercase_letter(Letter).
+lowercase_letter(Lower)--> {member(Lower, ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'])}.
+uppercase_letter(Upper) --> {member(Upper, ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'])}.
+digit(Digit) --> {member(Digit, [0,1,2,3,4,5,6,7,8,9])}.
+special_char(Special) --> {member(Special,  ['!','@','#','$','%','^','&','*','(',')','_','-','+','=','{','}','',']','|',':',';','"','<','>',',','.','?','/'])}.
