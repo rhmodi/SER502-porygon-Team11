@@ -37,19 +37,23 @@ plainassign(plaindeclaration(Var)) --> ['float'], variablename(Var).
 
 % Commands List start here
 commandlist(commd(PlainCmnd,CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
+commandlist(commd(PlainCmnd,CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
 commandlist(commd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
+commandlist(commd(BlkCmnd)) --> blockcommand(BlkCmnd).
 
 % Declaration of plain commands
 plaincommand(plain(Assign)) --> assignment(Assign).
 plaincommand(plain(Ternary)) --> ternary(Ternary).
 plaincommand(plain(Print)) --> printStmt(Print).
 plaincommand(plain(StrLen)) --> strlen(StrLen).
-plaincommand(plain(If)) --> ifcommand(If).
-plaincommand(plain(IfElse)) --> ifelsecommand(IfElse).
-plaincommand(plain(IfELseLadder)) --> ifELseLaddercommand(IfELseLadder).
-plaincommand(plain(While)) --> whilecommand(While).
-plaincommand(plain(For)) --> forcommand(For).
-plaincommand(plain(ForInRange)) --> forinrangecommand(ForInRange).
+
+%Separeted syntax structures which need {} so that they do not need ; too.
+blockcommand(blkcmd(If)) --> ifcommand(If).
+blockcommand(blkcmd(IfElse)) --> ifelsecommand(IfElse).
+blockcommand(blkcmd(IfELseLadder)) --> ifELseLaddercommand(IfELseLadder).
+blockcommand(blkcmd(While)) --> whilecommand(While).
+blockcommand(blkcmd(For)) --> forcommand(For).
+blockcommand(blkcmd(ForInRange)) --> forinrangecommand(ForInRange).
 
 
 % Declaration of types of assignment
