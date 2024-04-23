@@ -12,23 +12,23 @@ decls(D)--> constassign(D).
 decls(D)--> declassign(D).
 decls(D)--> plainassign(D).
 
-constassign(const(C,N)) --> ['const'], ['int'], variablename(C),[=],num(N).
-constassign(const(C,S)) --> ['const'], ['string'], variablename(C),[=],stringvalue(S).
-constassign(const(C,BE)) --> ['const'], ['bool'], variablename(C),[=],boolvalue(BE).
-constassign(const(C,F)) --> ['const'], ['float'], variablename(C),[=],floatvalue(F).
-constassign(const(C,Expr)) --> ['const'], ['int'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),[=],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),[=],expr(Expr).
+constassign(const(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
+constassign(const(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
+constassign(const(C,BE)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(BE).
+constassign(const(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
+constassign(const(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
+constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),[=],num(Value).
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),[=],stringvalue(Value).
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),[=],boolvalue(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),[=],floatvalue(Value).
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),[=],expr(Value).
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),[=],expr(Value). 
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),[=],expr(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),[=],expr(Value).
+declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],num(Value).
+declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
+declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
+declassign(declaration(Var,Value)) --> ['float'], variablename(Var),['='],floatvalue(Value).
+declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
+declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
+declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
+declassign(declaration(Var,Value)) --> ['float'], variablename(Var),['='],expr(Value).
 
 plainassign(plaindeclaration(Var)) --> ['int'], variablename(Var).
 plainassign(plaindeclaration(Var)) --> ['string'], variablename(Var).
