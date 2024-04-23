@@ -195,8 +195,7 @@ character(Char) --> letter(Char).
 character(Char) --> num(Char).
 character(Char) --> special_char(Char).
 
-num(number(Num)) --> digit(Num), num(Num).
-num(number(Num)) --> digit(Num).
+num(num(Num)) --> [Num],{number(Num)}.
 
 letter(Letter) --> [Letter],lowercase_letter(Letter).
 letter(Letter) --> [Letter],uppercase_letter(Letter).
