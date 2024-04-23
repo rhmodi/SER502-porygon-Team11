@@ -175,11 +175,7 @@ boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A SPECIAL CHARACTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%% VAR NAME CAN BE ALPHANUMERIC AND CAN CONTAIN UNDERSCORE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-variablename(var(Var)) --> lowercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, lowercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, uppercase_letter(Var).
-variablename(var(Var)) --> lowercase_letter(Var), { lowercase_letter(Var) | uppercase_letter(Var) | digit(Var) | '_' }, digit(Var).
+variablename(var(C))-->[C].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
