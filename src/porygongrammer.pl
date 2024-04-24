@@ -37,24 +37,30 @@ plainassign(plaindeclaration(Var)) --> ['float'], variablename(Var).
 
 % Commands List start here
 commandlist(commd(PlainCmnd,CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
+commandlist(commd(PlainCmnd,CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
 commandlist(commd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
+commandlist(commd(BlkCmnd)) --> blockcommand(BlkCmnd).
 
 % Declaration of plain commands
 plaincommand(plain(Assign)) --> assignment(Assign).
 plaincommand(plain(Ternary)) --> ternary(Ternary).
 plaincommand(plain(Print)) --> printStmt(Print).
 plaincommand(plain(StrLen)) --> strlen(StrLen).
-plaincommand(plain(If)) --> ifcommand(If).
-plaincommand(plain(IfElse)) --> ifelsecommand(IfElse).
-plaincommand(plain(IfELseLadder)) --> ifELseLaddercommand(IfELseLadder).
-plaincommand(plain(While)) --> whilecommand(While).
-plaincommand(plain(For)) --> forcommand(For).
-plaincommand(plain(ForInRange)) --> forinrangecommand(ForInRange).
+plaincommand(plain(Value)) -->increment_operation(Value).
+plaincommand(plain(Value)) -->decrement_operation(Value).
+
+%Separeted syntax structures which need {} so that they do not need ; too.
+blockcommand(blkcmd(If)) --> ifcommand(If).
+blockcommand(blkcmd(IfElse)) --> ifelsecommand(IfElse).
+blockcommand(blkcmd(IfELseLadder)) --> ifELseLaddercommand(IfELseLadder).
+blockcommand(blkcmd(While)) --> whilecommand(While).
+blockcommand(blkcmd(For)) --> forcommand(For).
+blockcommand(blkcmd(ForInRange)) --> forinrangecommand(ForInRange).
 
 
 % Declaration of types of assignment
 assignment(assign(A))--> initialassignment(A).
-assignment(assign(A))--> declassign(A).
+%assignment(assign(A))--> declassign(A).
 assignment(assign(A))--> shorthandAssign(A).
 
 shorthandAssign(shassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
@@ -89,6 +95,10 @@ exponent(X)--> ['('],expr(X),[')'].
 exponent(A)--> initialassignment(A).
 exponent(Var)--> variablename(Var).
 exponent(N)--> num(N).
+exponent(T) --> ternary(T).
+exponent(B) --> boolvalue(B).
+exponent(I)--> increment_operation(I).
+exponent(Dec)--> decrement_operation(Dec).
 
 square(square(S))--> ['sq'],['('],expr(S),[')'].
 squareRoot(squareroot(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
@@ -129,11 +139,11 @@ whilecommand(while(Condition,C))--> ['while'],['('],boolcondition(Condition), ['
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
-
+forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variableupdation(increment(Ops))--> increment_operation(Ops).
 variableupdation(decrement(Ops))--> decrement_operation(Ops).
-variableupdation(assignment(Assign))--> expr(Assign).
+variableupdation(assignment(Assign))--> assignment(Assign).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% increment and decrement operations%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 increment_operation(increment(Var)) --> variablename(Var),['++'].
@@ -149,7 +159,7 @@ range(Range)--> num(Range).
 
 %%%%%%%%%%%%check before pushing%%%%%%%%%%%%%% Terenary Statement%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ternary(ternary(Bool,Expr1,Expr2))-->['('], boolcondition(Bool),[')'],['?'],expr(Expr1),[':'],expr(Expr2).
-ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
+%ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRINT STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
@@ -168,7 +178,7 @@ floatvalue(N)--> num(N).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 boolvalue(bool(true))--> ['true'].
 boolvalue(bool(false))--> ['false'].
-boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
+%boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -177,6 +187,7 @@ boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variablename(var(Atom)) -->
     [Atom],
+    {\+ member(Atom, ['const','int','string','float','bool','true','false','if','elif','else', 'for', 'in','range','while'])},
     { atom_chars(Atom, [First|RestChars]) },
     { code_type(First, lower) },
     {restOfVariableName(RestChars)}.

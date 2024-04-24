@@ -1,9 +1,5 @@
 {
-    int a = 25;
-    float  b = 36.0;
-    string s = "Raks";
-    print(a);
-    int c = 0;
+   
     for i in range(a,b) {
         i++;
     }
