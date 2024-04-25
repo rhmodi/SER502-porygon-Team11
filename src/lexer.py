@@ -20,7 +20,9 @@ class Constants:
 # Reference: https://sly.readthedocs.io/en/latest/sly.html
 class PgonLexer(Lexer):
     # SET OF TOKENS
-    tokens = {FLOAT, ID, NUMBER, STRING, INC, DEC, EQ, GE, LE, NE,
+    tokens = {FLOAT, ID, NUMBER, 
+              #STRING, 
+              INC, DEC, EQ, GE, LE, NE,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
               IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
@@ -63,7 +65,7 @@ class PgonLexer(Lexer):
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'
-    STRING = r'\".*\"'
+    # STRING = r'\".*\"'
     INC = r'\+\+'
     DEC = r'--'
     EQ = r'=='

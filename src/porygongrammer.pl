@@ -1,3 +1,4 @@
+
 :-use_rendering(svgtree).
 :- table expr/3,factor/3,term/3.
 
@@ -13,17 +14,17 @@ decls(D)--> constassign(D).
 decls(D)--> declassign(D).
 decls(D)--> plainassign(D).
 
-constassign(t_const_int(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
-constassign(t_const_str(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
-constassign(t_const_bool(C,B)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(B).
+%constassign(t_const_int(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
+%constassign(t_const_str(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
+%constassign(t_const_bool(C,B)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(B).
 constassign(t_const_flt(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
 constassign(t_const_int_e(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
 constassign(t_const_str_e(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
 constassign(t_const_bool_e(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
 constassign(t_const_flt_e(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
-declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
-declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
+%declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
+%declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
 declassign(t_int(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
 declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value).
 declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
@@ -96,6 +97,7 @@ exponent(Var)--> variablename(Var).
 exponent(N)--> num(N).
 exponent(T) --> ternary(T).
 exponent(B) --> boolvalue(B).
+exponent(S) -->stringvalue(S).
 exponent(I)--> increment_operation(I).
 exponent(Dec)--> decrement_operation(Dec).
 
@@ -167,7 +169,8 @@ printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
 strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stringvalue((Str))--> [Str].
+stringvalue((Str))--> ['\"'],[Str],['\"'].
+stringvalue((Str))--> variablename(Str).
 %stringvalue(string(Str))--> ['\"'],['\"'].
 % LEXER is handling it
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
