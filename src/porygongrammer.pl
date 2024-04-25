@@ -2,44 +2,43 @@
 :- table expr/3,factor/3,term/3.
 
 %Programming block begins here
-block(block(D,E))--> ['{'],decl(D),commandlist(E),['}'].
+block(t_blk(D;C))--> ['{'],decl(D),commandlist(C),['}'].
 
 % Declaration statments here for constants,variables etc.
 
-decl(dec(D,DL))--> decls(D),[';'],decl(DL).
-decl(dec(D)) --> decls(D),[';'].
+decl(t_decl(D;DL))--> decls(D),[';'],decl(DL).
+decl(t_decl(D)) --> decls(D),[';'].
 
 decls(D)--> constassign(D).
 decls(D)--> declassign(D).
 decls(D)--> plainassign(D).
 
-constassign(const(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
-constassign(const(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
-constassign(const(C,BE)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(BE).
-constassign(const(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
-constassign(const(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
-constassign(const(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
+constassign(t_const_int(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
+constassign(t_const_str(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
+constassign(t_const_bool(C,B)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(B).
+constassign(t_const_flt(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
+constassign(t_const_int_e(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
+constassign(t_const_str_e(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
+constassign(t_const_bool_e(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
+constassign(t_const_flt_e(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
+declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
+declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
+declassign(t_int(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
+declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
+declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
+declassign(t_flt(Var,Value)) --> ['float'], variablename(Var),['='],expr(Value).
 
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
-declassign(declaration(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
-declassign(declaration(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
-declassign(declaration(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
-declassign(declaration(Var,Value)) --> ['float'], variablename(Var),['='],expr(Value).
-
-plainassign(plaindeclaration(Var)) --> ['int'], variablename(Var).
-plainassign(plaindeclaration(Var)) --> ['string'], variablename(Var).
-plainassign(plaindeclaration(Var)) --> ['bool'], variablename(Var).
-plainassign(plaindeclaration(Var)) --> ['float'], variablename(Var).
+plainassign(t_int_decl(Var)) --> ['int'], variablename(Var).
+plainassign(t_str_decl(Var)) --> ['string'], variablename(Var).
+plainassign(t_bool_decl(Var)) --> ['bool'], variablename(Var).
+plainassign(t_flt_decl(Var)) --> ['float'], variablename(Var).
 
 % Commands List start here
-commandlist(commd(PlainCmnd,CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
-commandlist(commd(PlainCmnd,CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
-commandlist(commd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
-commandlist(commd(BlkCmnd)) --> blockcommand(BlkCmnd).
+commandlist(t_cmd(PlainCmnd;CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
+commandlist(t_cmd(PlainCmnd;CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
+commandlist(t_cmd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
+commandlist(t_cmd(BlkCmnd)) --> blockcommand(BlkCmnd).
 
 % Declaration of plain commands
 plaincommand(plain(Assign)) --> assignment(Assign).
@@ -199,17 +198,17 @@ restOfVariableName([]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% ALPHANUMERIC DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
-alphanumeric(Alpha) --> character(Alpha).
-character(Char) --> letter(Char).
-character(Char) --> num(Char).
-character(Char) --> special_char(Char).
+%alphanumeric(Alpha) --> character(Alpha), alphanumeric(Alpha).
+%alphanumeric(Alpha) --> character(Alpha).
+%character(Char) --> letter(Char).
+%character(Char) --> num(Char).
+%character(Char) --> special_char(Char).
 
 num(num(Num)) --> [Num],{number(Num)}.
 
-letter(Letter) --> [Letter],lowercase_letter(Letter).
-letter(Letter) --> [Letter],uppercase_letter(Letter).
-lowercase_letter(Lower)--> {member(Lower, ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'])}.
-uppercase_letter(Upper) --> {member(Upper, ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'])}.
-digit(Digit) --> {member(Digit, [0,1,2,3,4,5,6,7,8,9])}.
-special_char(Special) --> {member(Special,  ['!','@','#','$','%','^','&','*','(',')','_','-','+','=','{','}','',']','|',':',';','"','<','>',',','.','?','/'])}.
+%letter(Letter) --> [Letter],lowercase_letter(Letter).
+%letter(Letter) --> [Letter],uppercase_letter(Letter).
+%lowercase_letter(Lower)--> {member(Lower, ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'])}.
+%uppercase_letter(Upper) --> {member(Upper, ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'])}.
+%digit(Digit) --> {member(Digit, [0,1,2,3,4,5,6,7,8,9])}.
+%special_char(Special) --> {member(Special,  ['!','@','#','$','%','^','&','*','(',')','_','-','+','=','{','}','',']','|',':',';','"','<','>',',','.','?','/'])}.
