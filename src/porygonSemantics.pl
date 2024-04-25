@@ -61,16 +61,191 @@ eval_cmd(t_cmd(X;Y),Env,New_Env):-
 eval_cmd(t_cmd(X),Env,New_Env):-
     eval_cmd(X,Env,New_Env).
 
+eval_cmd(t_assign(X:=Y),Env,New_Env):-
+    eval_expr(Y,Env, Env1,R),
+    update((X,R),Env1,New_Env).
 
+eval_cmd(t_ifte(X,Y,_Z),Env, New_Env):-
+    eval_bool(X, Env, Env1, true),
+    eval_cmd(Y, Env1, New_Env).
 
-lookUp(X,Env,Val):-
+eval_cmd(t_ifte(X,_Y,Z),Env, New_Env):-
+    eval_bool(X, Env, Env1, false),
+    eval_cmd(Z, Env1, New_Env).
+
+eval_cmd(t_while(X,_Y), Env, Env1):-
+    eval_bool(X, Env, Env1, false).
+eval_cmd(t_while(X,Y), Env, New_Env):-
+    eval_bool(X, Env, Env1, true),
+    eval_cmd(Y, Env1, Env2),
+    eval_cmd(t_while(X,Y),Env2, New_Env).
+
+eval_cmd(t_blk(X;Y),Env,New_Env):-
+    eval_decl(X,Env, Env1),
+    eval_cmd(Y,Env1,New_Env).
+
+eval_bool(true,_Env,_New_Env,true).
+eval_bool(false,_Env,_New_Env,false).
+eval_bool(t_bool(not,X),Env,New_Env,R):-
+    eval_bool(X, Env, New_Env, Bool),
+    not(Bool,R).
+eval_bool(t_bool(X=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx = Ry,
+    R = true.
+eval_bool(t_bool(X=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx \= Ry,
+    R = false.
+
+not(true,false).
+not(false, true).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RELATIONAL OP evaluation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+eval_bool(t_bool(X<Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx < Ry,
+    R = true.
+eval_bool(t_bool(X<Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx >= Ry,
+    R = false.
+
+eval_bool(t_bool(X>Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx > Ry,
+    R = true.
+
+eval_bool(t_bool(X>Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx =< Ry,
+    R = false.
+
+eval_bool(t_bool(X<=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx =< Ry,
+    R = true.
+
+eval_bool(t_bool(X<=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx > Ry,
+    R = false.
+
+eval_bool(t_bool(X>=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx >= Ry,
+    R = true.
+
+eval_bool(t_bool(X>=Y),Env, New_Env, R):-
+    eval_expr(Y,Env, Env1, Ry),
+    eval_expr(X,Env1,New_Env,Rx),
+    Rx < Ry,
+    R = false.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% expr evaluation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eval_expr(t_expr(X+Y),Env, New_Env,R):-
+    eval_expr(X, Env, Env1, Rx),
+    eval_expr(Y, Env1, New_Env, Ry),
+    R is Rx + Ry.
+
+eval_expr(t_expr(X-Y),Env, New_Env,R):-
+    eval_expr(X, Env, Env1, Rx),
+    eval_expr(Y, Env1, New_Env, Ry),
+    R is Rx - Ry.
+
+eval_expr(t_expr(X),Env, New_Env,R):-
+    eval_expr(X, Env, New_Env,R).
+
+eval_expr(t_term(X*Y),Env, New_Env,R):-
+    eval_expr(X, Env, Env1, Rx),
+    eval_expr(Y, Env1, New_Env, Ry),
+    R is Rx * Ry.
+
+eval_expr(t_term(X/Y),Env, New_Env,R):-
+    eval_expr(X, Env, Env1, Rx),
+    eval_expr(Y, Env1, New_Env, Ry),
+    R is Rx / Ry.
+
+eval_expr(t_term(X^Y),Env, New_Env,R):-
+    eval_expr(X, Env, Env1, Rx),
+    eval_expr(Y, Env1, New_Env, Ry),
+    R is Rx ** Ry.
+
+eval_expr(t_term(X mod Y),Env, New_Env,R):- %modulus change in lexer,parser(varname,expression,keyword)
+    eval_expr(X, Env, Env1, R).
+    eval_expr(Y, Env, New_Env, R).
+    R is Rx mod Ry.
+
+eval_expr(t_expr(sq(X)), Env, New_Env, R):-
+    eval_expr(X, Env, New_Env, Rx),
+    R is Rx * Rx.
+
+eval_expr(t_expr(sqrt(X)), Env, New_Env, R):-
+    eval_expr(X, Env, New_Env, Rx),
+    R is sqrt(Rx).
+
+eval_expr(t_expr(cube(X)), Env, New_Env, R):-
+    eval_expr(X, Env, New_Env, Rx),
+    R is Rx * Rx * Rx.
+
+eval_expr(t_expr(cbrt(X)), Env, New_Env, R):-
+    eval_expr(X, Env, New_Env, Rx),
+    R is cbrt(Rx).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ternary, incr, decr %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eval_expr(t_expr(X), Env, New_Env, R):-
+    eval_expr(X, Env, New_Env, R).
+
+eval_expr(t_expr(num(N)), Env, Env, N).
+
+eval_expr(t_expr(ternary(T)), Env, New_Env, R):-
+    eval_expr(T, Env, New_Env, R).
+
+eval_expr(t_expr(increment_operation(I)), Env, New_Env, R):-
+    eval_expr(I, Env, New_Env, Rx),
+    R is Rx + 1.
+
+eval_expr(t_expr(decrement_operation(Dec)), Env, New_Env, R):-
+    eval_expr(Dec, Env, New_Env, Rx),
+    R is Rx - 1.
+
+eval_expr(t_term(X),Env, New_Env,R):-
+    eval_expr(X, Env, New_Env, R).
+
+eval_expr(t_factor(X),Env, New_Env,R):-
+    eval_expr(X, Env, New_Env,R).
+
+eval_expr(t_assign(X:=Y),Env, New_Env,R):-
+    eval_expr(Y,Env, Env1, R),
+    update((X,R), Env1, New_Env).
+
+eval_expr(t_num(X), Env, Env, X).
+
+eval_expr(t_id(X), Env, Env,R):-
+    look_Up(X, Env, R).
+
+look_Up(X,Env,Val):-
     flatten(Env, FEnv), %to include constant variables in search
-    loop_Up(X, FEnv, Val).
+    look_Up(X, FEnv, Val).
+
 look_Up(X,[],_Val):-
     write('Uninitialized variable: '),
     write(X),
     fail.
+
 look_Up(HVar,[(HVar,HVal)|_T],HVal).
+
 look_Up(X,[(HVar,_HVal)|T],Val):-
     X \= HVar,
     lookUp(X,T,Val).
