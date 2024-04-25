@@ -1,7 +1,12 @@
 import os
+os.environ['SWI_HOME_DIR'] = 'C:\\Program Files\\swipl'
 import sys
 import argparse
 from sly import Lexer
+
+from pyswip import Prolog
+
+
 
 
 class Constants:
@@ -9,6 +14,7 @@ class Constants:
     PRINT_GREEN_TEXT = '\033[92m'
     PRINT_NORMAL_TEXT = '\033[0m'
     PRINT_YELLOW_TEXT = '\033[93m'
+    PRINT_RED_TEXT = '\033[91m'
 
 
 # Reference: https://sly.readthedocs.io/en/latest/sly.html
@@ -117,23 +123,38 @@ def write_tokens_to_file(tokens, filename):
               'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
 
 
+
+def passing_tokens_to_prolog(content):
+    prolog = Prolog()
+    prolog.consult("porygongrammer.pl")   
+    results = [] 
+    if any (prolog.query("block(T, " + content + ", [])")):
+        print("PARSE TREE GENERATION: "+Constants.PRINT_GREEN_TEXT + "SUCCESSFUL" + Constants.PRINT_NORMAL_TEXT)
+        for result in prolog.query("block(T, " + content + ", [])"):
+            results.append(result) #After evalutor print JUST IT WILL EVALUATE results
+    else :
+        print("PARSE TREE GENERATION: "+Constants.PRINT_RED_TEXT + "FAILURE" + Constants.PRINT_NORMAL_TEXT)
+   
+    
+    return results
+
+
+
 if __name__ == '__main__':
     print(Constants.PRINT_YELLOW_TEXT + "Starting Lexer" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
     print(parsed_args)
     input_filename = parsed_args.input[0]
-    # print("Input file",input_filename)
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
-    # print("Output file",output_filename)
     file_data = read_input_file(input_filename)
-    # print("File Data", file_data)
     lexer = PgonLexer()
-    # print("LExer",lexer)
     tokens = lexer.tokenize(file_data)
-    # print("Tokens",tokens)
     write_tokens_to_file(tokens, output_filename)
+    data = read_input_file(output_filename)
+    results = passing_tokens_to_prolog(data)
+    print(results)    
 
-    should_evaluate = parsed_args.evaluate
-    print(should_evaluate)
-    if should_evaluate:
-        os.system("swipl -g \"main('" + output_filename + "')\" main.pl")
+    # should_evaluate = parsed_args.evaluate
+    # print(should_evaluate)
+    # if should_evaluate:
+    #     os.system("swipl -g \"main('" + output_filename + "')\" main.pl")
