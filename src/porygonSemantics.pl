@@ -59,7 +59,8 @@ init_const((Var,_Val),Env,_):-
     write(' is already defined'),
     fail.
 init_const((Var,Val,Type),[Variables,[]],[Variables,[(Var,Val,Type)]]).
-init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]).
+init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]):-
+    Const \= [].
 
 
 init_var((Var,_Val,_Type),Env,_):-
@@ -95,4 +96,4 @@ eval_constassign(t_const_bool_e(X,Y),EVT, UEVT):-
 eval_expr(var(Var), Var).
 eval_expr(num(Num), Num).
 eval_expr(bool(Bool),Bool).
-
+eval_expr(str(Str),Str).
