@@ -1,12 +1,12 @@
-:- use_rendering(svgtree).
+:-use_rendering(svgtree).
 :- table expr/3,factor/3,term/3.
 
 %Programming block begins here
-block(t_blk(D;C))--> ['{'],decl(D),commandlist(C),['}'].
+block(t_blk(D,C))--> ['{'],decl(D),commandlist(C),['}'].
 
 % Declaration statments here for constants,variables etc.
 
-decl(t_decl(D;DL))--> decls(D),[';'],decl(DL).
+decl(t_decl(D,DL))--> decls(D),[';'],decl(DL).
 decl(t_decl(D)) --> decls(D),[';'].
 
 decls(D)--> constassign(D).
@@ -25,7 +25,7 @@ constassign(t_const_flt_e(C,Expr)) --> ['const'], ['float'], variablename(C),['=
 declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
 declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
 declassign(t_int(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
-declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value). 
+declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value).
 declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
 declassign(t_flt(Var,Value)) --> ['float'], variablename(Var),['='],expr(Value).
 
@@ -35,8 +35,8 @@ plainassign(t_bool_decl(Var)) --> ['bool'], variablename(Var).
 plainassign(t_flt_decl(Var)) --> ['float'], variablename(Var).
 
 % Commands List start here
-commandlist(t_cmd(PlainCmnd;CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
-commandlist(t_cmd(PlainCmnd;CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
+commandlist(t_cmd(PlainCmnd,CmndList)) --> plaincommand(PlainCmnd),[;],commandlist(CmndList).
+commandlist(t_cmd(PlainCmnd,CmndList)) --> blockcommand(PlainCmnd),commandlist(CmndList).
 commandlist(t_cmd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
 commandlist(t_cmd(BlkCmnd)) --> blockcommand(BlkCmnd).
 
@@ -124,12 +124,12 @@ condition(boolvalue(Bool))--> boolvalue(Bool).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% IF STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ifcommand(If)--> ifpart(If).
-ifelsecommand((If,Else))--> ifpart(If),elsepart(Else).
-ifELseLaddercommand((If,Elif,Else))--> ifpart(If),elseifpart(Elif),elsepart(Else).
+ifcommand(if(If))--> ifpart(If).
+ifelsecommand(ifelse(If,Else))--> ifpart(If),elsepart(Else).
+ifELseLaddercommand(ifelseladder(If ,Elif ,Else))--> ifpart(If),elseifpart(Elif),elsepart(Else).
 
 ifpart(if(B,X))--> ['if'],['('],boolcondition(B), [')'],['{'],commandlist(X),['}'].
-elseifpart(elseif(B,E1,E2))--> ['elif'],['('],boolcondition(B), [')'],['{'],commandlist(E1),['}'],elseifpart(E2). 
+elseifpart(elseif(B,E1,E2))--> ['elif'],['('],boolcondition(B), [')'],['{'],commandlist(E1),['}'],elseifpart(E2).
 elseifpart(elseif(B,E))--> ['elif'],['('],boolcondition(B), [')'],['{'],commandlist(E),['}'].
 elsepart(else(C))--> ['else'],['{'],commandlist(C),['}'].
 
@@ -169,7 +169,7 @@ strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 stringvalue((Str))--> [Str].
 %stringvalue(string(Str))--> ['\"'],['\"'].
-% LEXER is handling it 
+% LEXER is handling it
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 floatvalue(N)--> num(N).
@@ -178,6 +178,7 @@ floatvalue(N)--> num(N).
 boolvalue(bool(true))--> ['true'].
 boolvalue(bool(false))--> ['false'].
 %boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
