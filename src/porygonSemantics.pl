@@ -52,6 +52,7 @@ update_var((Var, Val,Type), [[(SomeVar, SomeVal, SomeType)|T], Const], UpdatedEn
 
 typecheck(X,Y):- integer(X),integer(Y).
 typecheck(X,Y):- float(X),float(Y).
+typecheckstring(X,Y):- atom(X),atom(Y).
 
 init_const((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
@@ -99,15 +100,18 @@ eval_constassign(t_const_bool_e(X,Y),EVT, UEVT):-
     boolean(Bool),
     init_const((Var,Bool,bool),EVT2,UEVT).
 
+% At the end add halt whenever we encounter incompatible 
 
 eval_expr(addition(X,Y),EVT,NEVT,Val):- 
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1+Val2.
 
-eval_expr(addition(X,Y),EVT,NEVT,Val):- 
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),write("Incompatible Datatype while evaluating expressions"),halt.
+eval_expr(addition(X,Y),EVT,NEVT,Val):-
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),concat(Val1,Val2,Val).
 
-eval_expr(addition(_X,_Y),_EVT,_NEVT,_Val):- true.
+eval_expr(addition(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,write("Incompatible Datatype while evaluating expressions").
+
 eval_expr(var(Var), EVT, EVT, Var).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
-eval_expr(str(Str), EVT, EVT, Str):- string(Str).
+eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
