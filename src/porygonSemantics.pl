@@ -79,26 +79,59 @@ init_var((Var,Val,Type),[Const, []],[[(Var,Val,Type)], Const]):-
 init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):-
     not(soft_look_up(Var,[Variables,Const], _SomeVal)).
 
-eval_constassign(t_const_int_e(X,Y),EVT, UEVT):-
+eval_assign(t_const_int_e(X,Y),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Num),
     integer(Num),
     init_const((Var,Num,int),EVT2, UEVT).
-eval_constassign(t_const_float_e(X,Y),EVT, UEVT):-
+eval_assign(t_const_float_e(X,Y),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Flt),
     float(Flt),
     init_const((Var,Flt,float),EVT2,UEVT).
-eval_constassign(t_const_str_e(X,Y),EVT, UEVT):-
+eval_assign(t_const_str_e(X,Y),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Str),
     atom(Str),
     init_const((Var,Str,str),EVT2,UEVT).
-eval_constassign(t_const_bool_e(X,Y),EVT, UEVT):-
+eval_assign(t_const_bool_e(X,Y),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Bool),
     boolean(Bool),
     init_const((Var,Bool,bool),EVT2,UEVT).
+eval_assign(t_int(X,Y),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    eval_expr(Y, EVT1, EVT2, Num),
+    integer(Num),
+    init_var((Var,Num,int),EVT2, UEVT).
+eval_assign(t_flt(X,Y),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    eval_expr(Y, EVT1, EVT2, Flt),
+    float(Flt),
+    init_var((Var,Flt,float),EVT2,UEVT).
+eval_assign(t_str(X,Y),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    eval_expr(Y, EVT1, EVT2, Str),
+    atom(Str),
+    init_var((Var,Str,str),EVT2,UEVT).
+eval_assign(t_bool(X,Y),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    eval_expr(Y, EVT1, EVT2, Bool),
+    boolean(Bool),
+    init_var((Var,Bool,bool),EVT2,UEVT).
+eval_assign(t_bool_decl(X),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    init_var((Var,undef,bool),EVT1,UEVT).
+eval_assign(t_int_decl(X),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    init_var((Var,undef,int),EVT1,UEVT).
+eval_assign(t_str_decl(X),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    init_var((Var,undef,str),EVT1,UEVT).
+eval_assign(t_flt_decl(X),EVT, UEVT):-
+    eval_expr(X, EVT, EVT1, Var),
+    init_var((Var,undef,float),EVT1,UEVT).
+
 
 % At the end add halt whenever we encounter incompatible 
 
