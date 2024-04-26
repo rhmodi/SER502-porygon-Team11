@@ -135,6 +135,9 @@ eval_assign(t_flt_decl(X),EVT, UEVT):-
 
 % At the end add halt whenever we encounter incompatible 
 
+
+
+
 eval_expr(addition(X,Y),EVT,NEVT,Val):- 
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1+Val2.
 
@@ -216,7 +219,10 @@ eval_expr(exponent(X,Y),EVT,NEVT,Val):-
     eval_expr(Y,EVT1,NEVT,Val2),
     Val is Val1**Val2.
 
-eval_expr(var(Var), EVT, EVT, Var).
+eval_expr(increment(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1+1,update((X,Val,_),EVT,NEVT).
+eval_expr(decrement(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1-1,update((X,Val,_),EVT,NEVT).
+
+eval_expr(var(Var), EVT, EVT, Val):- hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
