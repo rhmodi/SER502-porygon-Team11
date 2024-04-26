@@ -40,12 +40,18 @@ update((Var, Val, Type), [Variables, Const], UpdatedEnv):-
     update_var((Var, Val, Type), [Variables, Const], UpdatedEnv).
 
 
+
+
 update_var((Var, Val, Type), [[],Const], [[(Var,Val, Type)],Const]).
 update_var((Var, Val, Type), [[(Var, _Val, Type) | T], Const], [[(Var, Val, Type)|T], Const]).
 update_var((Var, Val,Type), [[(SomeVar, SomeVal, SomeType)|T], Const], UpdatedEnv):-
     Var \= SomeVar,
     update((Var, Val, Type), [T, Const], [UpdatedVar, Const]),
     UpdatedEnv = [[(SomeVar, SomeVal, SomeType)|UpdatedVar], Const].
+
+
+typecheck(X,Y):- integer(X),integer(Y).
+typecheck(X,Y):- float(X),float(Y).
 
 init_const((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
@@ -56,6 +62,9 @@ init_const((Var,_Val,_Type),Env,_):-
 init_const((Var,Val,Type),[Variables,[]],[Variables,[(Var,Val,Type)]]).
 init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]):-
     Const \= [].
+
+
+
 
 init_var((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
@@ -90,6 +99,14 @@ eval_constassign(t_const_bool_e(X,Y),EVT, UEVT):-
     boolean(Bool),
     init_const((Var,Bool,bool),EVT2,UEVT).
 
+
+eval_expr(addition(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1+Val2.
+
+eval_expr(addition(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),write("Incompatible Datatype while evaluating expressions"),halt.
+
+eval_expr(addition(_X,_Y),_EVT,_NEVT,_Val):- true.
 eval_expr(var(Var), EVT, EVT, Var).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
