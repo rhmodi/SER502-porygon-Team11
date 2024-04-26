@@ -111,7 +111,7 @@ boolcondition(or(X,Y))--> boolcondition(X),['or'],and_condition(Y).
 boolcondition(X) --> and_condition(X).
 and_condition(and(X,Y))--> and_condition(X),['and'],condition(Y).
 and_condition(X) --> condition(X).
-condition(not(X))--> ['not'],boolcondition(X).
+condition(not(X))--> ['not'],condition(X).
 condition(X)--> ['('],boolcondition(X),[')'].
 condition(InitAssign) --> initialassignment(InitAssign).
 %condition(not(Expression))--> ['not'], expr(Expression).
