@@ -1,6 +1,6 @@
 
 :-use_rendering(svgtree).
-:- table expr/3,factor/3,term/3.
+:-table expr/3,factor/3,term/3.
 
 %Programming block begins here
 block(t_blk(D,C))--> ['{'],decl(D),commandlist(C),['}'].
@@ -42,12 +42,12 @@ commandlist(t_cmd(PlainCmnd)) --> plaincommand(PlainCmnd), [;].
 commandlist(t_cmd(BlkCmnd)) --> blockcommand(BlkCmnd).
 
 % Declaration of plain commands
-plaincommand(plain(Assign)) --> assignment(Assign).
-plaincommand(plain(Ternary)) --> ternary(Ternary).
-plaincommand(plain(Print)) --> printStmt(Print).
-plaincommand(plain(StrLen)) --> strlen(StrLen).
-plaincommand(plain(Value)) -->increment_operation(Value).
-plaincommand(plain(Value)) -->decrement_operation(Value).
+plaincommand(plain_assign(Assign)) --> assignment(Assign).
+plaincommand(plain_ternary(Ternary)) --> ternary(Ternary).
+plaincommand(plain_print(Print)) --> printStmt(Print).
+plaincommand(plain_strlen(StrLen)) --> strlen(StrLen).
+plaincommand(plain_increment(Value)) -->increment_operation(Value).
+plaincommand(plain_decrement(Value)) -->decrement_operation(Value).
 
 %Separeted syntax structures which need {} so that they do not need ; too.
 blockcommand(blkcmd(If)) --> ifcommand(If).
@@ -63,12 +63,12 @@ assignment(assign(A))--> initialassignment(A).
 %assignment(assign(A))--> declassign(A).
 assignment(assign(A))--> shorthandAssign(A).
 
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['+='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['-='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['*='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['/='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['%='],expr(Expr).
-shorthandAssign(shassign(Var,Expr))--> variablename(Var),['^='],expr(Expr).
+shorthandAssign(shassignadd(Var,Expr))--> variablename(Var),['+='],expr(Expr).
+shorthandAssign(shassignsub(Var,Expr))--> variablename(Var),['-='],expr(Expr).
+shorthandAssign(shassignmul(Var,Expr))--> variablename(Var),['*='],expr(Expr).
+shorthandAssign(shassigndiv(Var,Expr))--> variablename(Var),['/='],expr(Expr).
+shorthandAssign(shassignmod(Var,Expr))--> variablename(Var),['%='],expr(Expr).
+shorthandAssign(shassignexpo(Var,Expr))--> variablename(Var),['^='],expr(Expr).
 
 initialassignment(iassign(Var,Expr))--> variablename(Var),['='],expr(Expr).
 
@@ -115,7 +115,7 @@ and_condition(X) --> condition(X).
 condition(not(X))--> ['not'],boolcondition(X).
 condition(X)--> ['('],boolcondition(X),[')'].
 condition(InitAssign) --> initialassignment(InitAssign).
-condition(Expression)--> ['not'], expr(Expression).
+condition(not(Expression))--> ['not'], expr(Expression).
 condition(equivalance(Expr1,Expr2))--> expr(Expr1),['=='],expr(Expr2).
 condition(notequalsto(Expr1,Expr2))--> expr(Expr1),['!='],expr(Expr2).
 condition(lessthan(Expr1,Expr2))--> expr(Expr1),['<'],expr(Expr2).
@@ -126,7 +126,7 @@ condition(boolvalue(Bool))--> boolvalue(Bool).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% IF STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-ifcommand(if(If))--> ifpart(If).
+ifcommand((If))--> ifpart(If).
 ifelsecommand(ifelse(If,Else))--> ifpart(If),elsepart(Else).
 ifELseLaddercommand(ifelseladder(If ,Elif ,Else))--> ifpart(If),elseifpart(Elif),elsepart(Else).
 

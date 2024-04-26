@@ -121,80 +121,77 @@ eval_assign(t_bool(X,Y),EVT, UEVT):-
     init_var((Var,Bool,bool),EVT2,UEVT).
 eval_assign(t_bool_decl(X),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,undef,bool),EVT1,UEVT).
+    init_var((Var,false,bool),EVT1,UEVT).
 eval_assign(t_int_decl(X),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,undef,int),EVT1,UEVT).
+    init_var((Var,0,int),EVT1,UEVT).
 eval_assign(t_str_decl(X),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,undef,str),EVT1,UEVT).
+    init_var((Var,0,str),EVT1,UEVT).
 eval_assign(t_flt_decl(X),EVT, UEVT):-
     eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,undef,float),EVT1,UEVT).
+    init_var((Var,0.0,float),EVT1,UEVT).
 
 
-% At the end add halt whenever we encounter incompatible 
+% At the end add halt whenever we encounter incompatible
 
-
-
-
-eval_expr(addition(X,Y),EVT,NEVT,Val):- 
+eval_expr(addition(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1+Val2.
 
 eval_expr(addition(X,Y),EVT,NEVT,Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),concat(Val1,Val2,Val).
 %Halt
-eval_expr(addition(X,Y),EVT,NEVT,_Val):- 
+eval_expr(addition(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,write("Incompatible Datatype while evaluating expressions").
 
-eval_expr(subtraction(X,Y),EVT,NEVT,Val):- 
+eval_expr(subtraction(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1-Val2.
 
 %Halt
 eval_expr(subtraction(X,Y),EVT,NEVT,_Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
 %Halt
-eval_expr(subtraction(X,Y),EVT,NEVT,_Val):- 
+eval_expr(subtraction(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
 
 
-eval_expr(multiplication(X,Y),EVT,NEVT,Val):- 
+eval_expr(multiplication(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1*Val2.
 %Halt
 eval_expr(multiplication(X,Y),EVT,NEVT,_Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
 %Halt
-eval_expr(multiplication(X,Y),EVT,NEVT,_Val):- 
+eval_expr(multiplication(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
 
 
 %Halt
-eval_expr(division(X,Y),EVT,NEVT,_Val):- 
+eval_expr(division(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, write("Divide by 0 error").
 
-eval_expr(division(X,Y),EVT,NEVT,Val):- 
+eval_expr(division(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=\=0, Val is Val1/Val2.
 %Halt
 eval_expr(division(X,Y),EVT,NEVT,_Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
 %Halt
-eval_expr(division(X,Y),EVT,NEVT,_Val):- 
+eval_expr(division(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
 
 
 
 %Halt
-eval_expr(modulus(X,Y),EVT,NEVT,_Val):- 
+eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0 , write("Modulus by 0 error").
 
-eval_expr(modulus(X,Y),EVT,NEVT,Val):- 
+eval_expr(modulus(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, Val is Val1 mod Val2.
 
 %Halt
 eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
 %Halt
-eval_expr(modulus(X,Y),EVT,NEVT,_Val):- 
+eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
 
 
@@ -222,18 +219,156 @@ eval_expr(iassign(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,_Val),
     eval_expr(Y,EVT,EVT1,Val),
     update((X,Val,_),EVT1,NEVT).
-eval_expr(shassign(var(X),Y), EVT, NEVT, Val):-
-    hard_look_up(X,EVT,_Val),
-    eval_expr(Y,EVT,EVT1,Val),
-    update((X,Val,_),EVT1,NEVT).
+eval_expr(shassignadd(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(addition(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+eval_expr(shassignsub(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(subtraction(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+eval_expr(shassignmul(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(multiplication(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+eval_expr(shassigndiv(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(division(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+eval_expr(shassignmod(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(modulus(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+eval_expr(shassignexpo(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,Val1),
+    eval_expr(Y,EVT,EVT1,Val2),
+    eval_expr(exponent(num(Val1),num(Val2)),EVT1,EVT2,Val),
+    update((X,Val,_),EVT2,NEVT).
+
+
 eval_expr(assign(X), EVT, NEVT, Val):-
     eval_expr(X,EVT,NEVT,Val).
+eval_expr(ternary(X, Y, Z), EVT, NEVT, Val) :-
+    eval_condition(X, EVT, EVT1, Val1),
+    (   Val1 = true ->
+        eval_expr(Y, EVT1, NEVT, Val)
+    ;   eval_expr(Z, EVT1, NEVT, Val)
+    ).
+eval_expr(increment(var(Var)),EVT,NEVT,Val):-
+    eval_expr(var(Var),EVT,EVT1,Val1),
+    Val is Val1+1,
+    update((Var,Val,_),EVT1,NEVT).
+eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
+    eval_expr(var(Var),EVT,EVT1,Val1),
+    Val is Val1-1,
+    update((Var,Val,_),EVT1,NEVT).
 
 
-eval_expr(increment(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1+1,update((X,Val,_),EVT,NEVT).
-eval_expr(decrement(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1-1,update((X,Val,_),EVT,NEVT).
 
-eval_expr(var(Var), EVT, EVT, Val):- hard_look_up(Var,EVT,Val).
+eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
+
+eval_condition(boolvalue(Bool),EVT,UEVT,Val):-
+    eval_expr(Bool,EVT,UEVT,Val).
+eval_condition(greaterthan_orequalto(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1>=Val2 -> Val = true; Val = false).
+eval_condition(greaterthan(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1>Val2 -> Val = true; Val = false).
+eval_condition(lessthan_orequalto(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1=<Val2 -> Val = true; Val = false).
+eval_condition(lessthan(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1<Val2 -> Val = true; Val = false).
+eval_condition(notequalsto(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1\=Val2 -> Val = true; Val = false).
+eval_condition(equivalance(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    (Val1=Val2 -> Val = true; Val = false).
+eval_condition(or(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    ((Val1=true;Val2=true)->Val=true;Val=false).
+eval_condition(and(X,Y),EVT,UEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,UEVT,Val2),
+    ((Val1=true,Val2=true)->Val=true;Val=false).
+eval_condition(not(X),EVT,UEVT,Val):-
+    eval_expr(X,EVT,UEVT,Val1),
+    negate(Val1,Val).
+
+negate(true,false).
+negate(false,true).
+
+eval_if(if(X,Y),EVT,NEVT,Val):-
+    eval_condition(X,EVT,EVT1,Val1),
+    Val1 = true,
+    eval_commandlist(Y,EVT1,NEVT,Val).
+eval_elseif(elseif(X,Y,Z),EVT,NEVT,Val):-
+    eval_condition(X,EVT,EVT1,Val1),
+    (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val);
+    eval_elseif(Z,EVT1,NEVT,Val)).
+eval_elseif(elseif(X,Y),EVT,NEVT,Val):-
+    eval_condition(X,EVT,EVT1,Val1),
+    (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val)).
+eval_else(else(X),EVT,NEVT,Val):-
+    eval_commandlist(X,EVT,NEVT,Val).
+
+eval_ifelsecommand(ifelse(X,_Y),EVT,NEVT,Val):-
+    eval_if(X,EVT,NEVT,Val).
+eval_ifelsecommand(ifelse(X,Y),EVT,NEVT,Val):-
+    not(eval_if(X,EVT,_EVT1,_Val1)),
+    eval_else(Y,EVT,NEVT,Val).
+eval_ifelseladdercommand(ifelseladder(X, _Y, _Z),EVT,NEVT,Val):-
+    eval_if(X,EVT,NEVT,Val).
+eval_ifelseladdercommand(ifelseladder(X, Y, _Z),EVT,NEVT,Val):-
+    not(eval_if(X,EVT,_EVT1,_Val1)),
+    eval_elseif(Y,EVT,NEVT,Val).
+eval_ifelseladdercommand(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
+    not(eval_if(X,EVT,_EVT1,_Val1)),
+    not(eval_elseif(Y,EVT,NEVT,Val)),
+    eval_else(Z,EVT,NEVT,Val).
+
+
+
+
+
+eval_plaincommand(plain_assign(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val).
+eval_plaincommand(plain_terenary(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val).
+eval_plaincommand(plain_increment(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val).
+eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val).
+
+eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
+    eval_blockcommand(X,EVT,NEVT,Val).
+
+
+eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
+    eval_plaincommand(X,EVT,EVT1,_Val1),
+    eval_commandlist(Y,EVT1,UEVT,Val).
+eval_commandlist(t_cmd(X), EVT, UEVT, Val):-
+    eval_plaincommand(X,EVT,UEVT,Val).
+eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
+    eval_blockcommand(X,EVT,EVT1,_Val1),
+    eval_commandlist(Y,EVT1,UEVT,Val).
+eval_commandlist(t_cmd(X), EVT, UEVT, Val):-
+    eval_blockcommand(X,EVT,UEVT,Val).
