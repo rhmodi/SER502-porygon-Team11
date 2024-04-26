@@ -1,6 +1,5 @@
-
 :-use_rendering(svgtree).
-:-table expr/3,factor/3,term/3.
+:-table expr/3,factor/3,term/3,boolcondition/3, and_condition/3.
 
 %Programming block begins here
 block(t_blk(D,C))--> ['{'],decl(D),commandlist(C),['}'].
@@ -108,21 +107,21 @@ cubeRoot(cuberoot(S))--> ['cbrt'],['('],expr(S),[')'].
 
 %Boolean Expressions start here including logical operators 'and', 'or', 'not'.
 
-boolcondition(or(X,Y))--> and_condition(X),['or'],boolcondition(Y).
+boolcondition(or(X,Y))--> boolcondition(X),['or'],and_condition(Y).
 boolcondition(X) --> and_condition(X).
-boolcondition(and(X,Y))--> condition(X),['and'],and_condition(Y).
+and_condition(and(X,Y))--> and_condition(X),['and'],condition(Y).
 and_condition(X) --> condition(X).
 condition(not(X))--> ['not'],boolcondition(X).
 condition(X)--> ['('],boolcondition(X),[')'].
 condition(InitAssign) --> initialassignment(InitAssign).
-condition(not(Expression))--> ['not'], expr(Expression).
+%condition(not(Expression))--> ['not'], expr(Expression).
 condition(equivalance(Expr1,Expr2))--> expr(Expr1),['=='],expr(Expr2).
 condition(notequalsto(Expr1,Expr2))--> expr(Expr1),['!='],expr(Expr2).
 condition(lessthan(Expr1,Expr2))--> expr(Expr1),['<'],expr(Expr2).
 condition(lessthan_orequalto(Expr1,Expr2))--> expr(Expr1),['<='],expr(Expr2).
 condition(greaterthan(Expr1,Expr2))--> expr(Expr1),['>'],expr(Expr2).
 condition(greaterthan_orequalto(Expr1,Expr2))--> expr(Expr1),['>='],expr(Expr2).
-condition(boolvalue(Bool))--> boolvalue(Bool).
+condition(Bool)--> boolvalue(Bool).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% IF STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%
 
