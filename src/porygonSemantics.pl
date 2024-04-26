@@ -270,6 +270,7 @@ eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
 
 
 
+
 eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
@@ -356,6 +357,11 @@ eval_plaincommand(plain_terenary(X),EVT,NEVT,Val):-
 eval_plaincommand(plain_increment(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
 eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val).
+eval_plaincommand(plain_print(X),EVT,NEVT,Val):-
+    eval_print(X,EVT,NEVT,Val),
+    write(Val).
+eval_print(print(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
 
 eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
