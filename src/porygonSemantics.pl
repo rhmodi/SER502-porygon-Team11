@@ -111,6 +111,27 @@ eval_expr(addition(X,Y),EVT,NEVT,Val):-
 eval_expr(addition(X,Y),EVT,NEVT,_Val):- 
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,write("Incompatible Datatype while evaluating expressions").
 
+eval_expr(square(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    Val is Val1**2.
+
+eval_expr(cube(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    Val is Val1**3.
+
+eval_expr(sqrt(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    Val is Val1**(1/2).
+
+eval_expr(cbrt(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    Val is Val1**(1/3).
+
+eval_expr(exponent(X,Y),EVT,NEVT,Val):-
+    eval_expr(X,EVT,EVT1,Val1),
+    eval_expr(Y,EVT1,NEVT,Val2),
+    Val is Val1**Val2.
+
 eval_expr(var(Var), EVT, EVT, Var).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
