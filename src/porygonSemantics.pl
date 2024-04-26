@@ -218,6 +218,17 @@ eval_expr(exponent(X,Y),EVT,NEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,NEVT,Val2),
     Val is Val1**Val2.
+eval_expr(iassign(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,_Val),
+    eval_expr(Y,EVT,EVT1,Val),
+    update((X,Val,_),EVT1,NEVT).
+eval_expr(shassign(var(X),Y), EVT, NEVT, Val):-
+    hard_look_up(X,EVT,_Val),
+    eval_expr(Y,EVT,EVT1,Val),
+    update((X,Val,_),EVT1,NEVT).
+eval_expr(assign(X), EVT, NEVT, Val):-
+    eval_expr(X,EVT,NEVT,Val).
+
 
 eval_expr(increment(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1+1,update((X,Val,_),EVT,NEVT).
 eval_expr(decrement(var(X)),EVT,NEVT,Val):- hard_look_up(X,EVT,Val1),Val is Val1-1,update((X,Val,_),EVT,NEVT).
