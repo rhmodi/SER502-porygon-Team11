@@ -79,58 +79,59 @@ init_var((Var,Val,Type),[Const, []],[[(Var,Val,Type)], Const]):-
 init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):-
     not(soft_look_up(Var,[Variables,Const], _SomeVal)).
 
-eval_assign(t_const_int_e(X,Y),EVT, UEVT):-
+eval_assign(t_const_int_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Num),
     integer(Num),
-    init_const((Var,Num,int),EVT2, UEVT).
-eval_assign(t_const_float_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Flt),
+    init_const((Var,Num,int),EVT2, UEVT)).
+eval_assign(t_const_float_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
-    init_const((Var,Flt,float),EVT2,UEVT).
-eval_assign(t_const_str_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Str),
+    init_const((X,Flt,float),EVT2,UEVT)).
+eval_assign(t_const_str_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
-    init_const((Var,Str,str),EVT2,UEVT).
-eval_assign(t_const_bool_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Bool),
+    init_const((X,Str,str),EVT2,UEVT)).
+eval_assign(t_const_bool_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
-    init_const((Var,Bool,bool),EVT2,UEVT).
-eval_assign(t_int(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Num),
+    init_const((X,Bool,bool),EVT2,UEVT)).
+eval_assign(t_int(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Num),
     integer(Num),
-    init_var((Var,Num,int),EVT2, UEVT).
-eval_assign(t_flt(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Flt),
+    init_var((X,Num,int),EVT2, UEVT)).
+eval_assign(t_flt(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
-    init_var((Var,Flt,float),EVT2,UEVT).
-eval_assign(t_str(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Str),
+    init_var((X,Flt,float),EVT2,UEVT)).
+eval_assign(t_str(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
-    init_var((Var,Str,str),EVT2,UEVT).
-eval_assign(t_bool(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Bool),
+    init_var((X,Str,str),EVT2,UEVT)).
+eval_assign(t_bool(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
-    init_var((Var,Bool,bool),EVT2,UEVT).
-eval_assign(t_bool_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,false,bool),EVT1,UEVT).
-eval_assign(t_int_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0,int),EVT1,UEVT).
-eval_assign(t_str_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0,str),EVT1,UEVT).
-eval_assign(t_flt_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0.0,float),EVT1,UEVT).
+    init_var((X,Bool,bool),EVT2,UEVT)).
+eval_assign(t_bool_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,false,bool),EVT,UEVT)).
+eval_assign(t_int_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0,int),EVT,UEVT)).
+eval_assign(t_str_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0,str),EVT,UEVT)).
+eval_assign(t_flt_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0.0,float),EVT,UEVT)).
 
 
 % At the end add halt whenever we encounter incompatible
@@ -303,15 +304,15 @@ eval_condition(equivalance(X,Y),EVT,UEVT,Val):-
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1=Val2 -> Val = true; Val = false).
 eval_condition(or(X,Y),EVT,UEVT,Val):-
-    eval_expr(X,EVT,EVT1,Val1),
-    eval_expr(Y,EVT1,UEVT,Val2),
+    eval_condition(X,EVT,EVT1,Val1),
+    eval_condition(Y,EVT1,UEVT,Val2),
     ((Val1=true;Val2=true)->Val=true;Val=false).
 eval_condition(and(X,Y),EVT,UEVT,Val):-
-    eval_expr(X,EVT,EVT1,Val1),
-    eval_expr(Y,EVT1,UEVT,Val2),
+    eval_condition(X,EVT,EVT1,Val1),
+    eval_condition(Y,EVT1,UEVT,Val2),
     ((Val1=true,Val2=true)->Val=true;Val=false).
 eval_condition(not(X),EVT,UEVT,Val):-
-    eval_expr(X,EVT,UEVT,Val1),
+    eval_condition(X,EVT,UEVT,Val1),
     negate(Val1,Val).
 
 negate(true,false).
