@@ -139,11 +139,11 @@ whilecommand(while(Condition,C))--> ['while'],['('],boolcondition(Condition), ['
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
-forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
+%forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-variableupdation(increment(Ops))--> increment_operation(Ops).
-variableupdation(decrement(Ops))--> decrement_operation(Ops).
-variableupdation(assignment(Assign))--> assignment(Assign).
+variableupdation((Ops))--> increment_operation(Ops).
+variableupdation((Ops))--> decrement_operation(Ops).
+variableupdation((Assign))--> assignment(Assign).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% increment and decrement operations%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 increment_operation(increment(Var)) --> variablename(Var),['++'].

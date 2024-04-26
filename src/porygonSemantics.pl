@@ -318,35 +318,49 @@ eval_condition(not(X),EVT,UEVT,Val):-
 negate(true,false).
 negate(false,true).
 
-eval_if(if(X,Y),EVT,NEVT,Val):-
+eval_blk_command(if(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     Val1 = true,
     eval_commandlist(Y,EVT1,NEVT,Val).
-eval_elseif(elseif(X,Y,Z),EVT,NEVT,Val):-
+eval_blk_command(elseif(X,Y,Z),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val);
-    eval_elseif(Z,EVT1,NEVT,Val)).
-eval_elseif(elseif(X,Y),EVT,NEVT,Val):-
+    eval_blk_command(Z,EVT1,NEVT,Val)).
+eval_blk_command(elseif(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val)).
-eval_else(else(X),EVT,NEVT,Val):-
+eval_blk_command(else(X),EVT,NEVT,Val):-
     eval_commandlist(X,EVT,NEVT,Val).
 
-eval_ifelsecommand(ifelse(X,_Y),EVT,NEVT,Val):-
-    eval_if(X,EVT,NEVT,Val).
-eval_ifelsecommand(ifelse(X,Y),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    eval_else(Y,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, _Y, _Z),EVT,NEVT,Val):-
-    eval_if(X,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, Y, _Z),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    eval_elseif(Y,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    not(eval_elseif(Y,EVT,NEVT,Val)),
-    eval_else(Z,EVT,NEVT,Val).
+eval_blk_command(ifelse(X,_Y),EVT,NEVT,Val):-
+    eval_blk_command(X,EVT,NEVT,Val).
+eval_blk_command(ifelse(X,Y),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    eval_blk_command(Y,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, _Y, _Z),EVT,NEVT,Val):-
+    eval_blk_command(X,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, Y, _Z),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    eval_blk_command(Y,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    not(eval_blk_command(Y,EVT,NEVT,Val)),
+    eval_blk_command(Z,EVT,NEVT,Val).
 
+
+eval_blk_command(for(Assign, BoolCondition, Valupdation, C), EVT, NEVT, Val):-
+    eval_expr(Assign, EVT, EVT1, _),
+    eval_forloop(BoolCondition, Valupdation, C, EVT1, NEVT, Val).
+
+eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
+    eval_condition(BoolCondition, EVT, EVT1, BoolVal),
+    (BoolVal == true ->  
+        eval_commandlist(C, EVT1, EVT2, _),
+        eval_expr(Valupdation, EVT2, EVT3, _),
+        eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
+    ;
+        NEVT = EVT,
+        Val = false).
 
 
 
@@ -372,7 +386,7 @@ eval_stringlength(stringlength(X),EVT,NEVT,Val):-
     string_length(Val1,Val).
 
 eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
-    eval_blockcommand(X,EVT,NEVT,Val).
+    eval_blk_command(X,EVT,NEVT,Val).
 
 
 eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
@@ -385,3 +399,8 @@ eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
     eval_commandlist(Y,EVT1,UEVT,Val).
 eval_commandlist(t_cmd(X), EVT, UEVT, Val):-
     eval_blockcommand(X,EVT,UEVT,Val).
+
+
+
+
+
