@@ -361,8 +361,14 @@ eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
 eval_plaincommand(plain_print(X),EVT,NEVT,Val):-
     eval_print(X,EVT,NEVT,Val),
     write(Val).
+eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
+    eval_stringlength(X,EVT,NEVT,Val).
+
 eval_print(print(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
+eval_stringlength(stringlength(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    string_length(Val1,Val).
 
 eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
     eval_blockcommand(X,EVT,NEVT,Val).
