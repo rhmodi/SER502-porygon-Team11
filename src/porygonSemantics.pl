@@ -107,9 +107,60 @@ eval_expr(addition(X,Y),EVT,NEVT,Val):-
 
 eval_expr(addition(X,Y),EVT,NEVT,Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),concat(Val1,Val2,Val).
-
+%Halt
 eval_expr(addition(X,Y),EVT,NEVT,_Val):- 
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,write("Incompatible Datatype while evaluating expressions").
+
+eval_expr(subtraction(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1-Val2.
+
+%Halt
+eval_expr(subtraction(X,Y),EVT,NEVT,_Val):-
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+%Halt
+eval_expr(subtraction(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+
+
+eval_expr(multiplication(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1*Val2.
+%Halt
+eval_expr(multiplication(X,Y),EVT,NEVT,_Val):-
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+%Halt
+eval_expr(multiplication(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+
+
+%Halt
+eval_expr(division(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, write("Divide by 0 error").
+
+eval_expr(division(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=\=0, Val is Val1/Val2.
+%Halt
+eval_expr(division(X,Y),EVT,NEVT,_Val):-
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+%Halt
+eval_expr(division(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+
+
+
+%Halt
+eval_expr(modulus(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0 , write("Modulus by 0 error").
+
+eval_expr(modulus(X,Y),EVT,NEVT,Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, Val is Val1 mod Val2.
+
+%Halt
+eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+%Halt
+eval_expr(modulus(X,Y),EVT,NEVT,_Val):- 
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+
 
 eval_expr(square(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),

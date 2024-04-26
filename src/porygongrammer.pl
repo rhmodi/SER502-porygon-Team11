@@ -81,7 +81,7 @@ expr(X)--> term(X).
 
 term(multiplication(X,Y))--> term(X),['*'],factor(Y).
 term(division(X,Y))--> term(X),['/'],factor(Y).
-term(modulus(X,Y))--> term(X),['%'],factor(Y).
+term(modulus(X,Y))--> term(X),['mod'],factor(Y).
 term(X)--> factor(X).
 
 factor(exponent(X,Y))--> factor(X),['^'],exponent(Y).
