@@ -169,7 +169,7 @@ printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
 strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stringvalue((Str))--> ['\"'],[Str],['\"'].
+stringvalue(str(Str))--> ['\"'],[Str],['\"'].
 stringvalue((Str))--> variablename(Str).
 %stringvalue(string(Str))--> ['\"'],['\"'].
 % LEXER is handling it

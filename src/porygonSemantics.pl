@@ -55,7 +55,7 @@ init_const((Var,_Val,_Type),Env,_):-
     fail.
 init_const((Var,Val,Type),[Variables,[]],[Variables,[(Var,Val,Type)]]).
 init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]):-
-    Const\=[].
+    Const \= [].
 
 init_var((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
