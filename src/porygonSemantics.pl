@@ -376,7 +376,7 @@ eval_blk_command(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
     eval_blk_command(Z,EVT,NEVT,Val).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%% eval block command for loop (traditional) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% eval block command for loop (traditional) and for in range %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_blk_command(for(Assign, BoolCondition, Valupdation, C), EVT, NEVT, Val):-
     eval_expr(Assign, EVT, EVT1, _),
