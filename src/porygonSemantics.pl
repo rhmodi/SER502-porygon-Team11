@@ -287,14 +287,14 @@ eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
     Val is Val1-1,
     update((Var,Val,_),EVT1,NEVT).
 
-% eval_expr(X,EVT,NEVT,Val):- eval_condition(X,EVT,NEVT,Val).
-
 %%%%%%%%%%%%%%%%%%%%%%%% eval block variable lookup %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
+
+eval_expr(X,EVT,NEVT,Val):- eval_condition(X,EVT,NEVT,Val).
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for boolean %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -440,8 +440,6 @@ eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
 
 eval_print(print(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
-eval_print(print(X),EVT,NEVT,Val):-
-    eval_condition(X,EVT,NEVT,Val).
 eval_stringlength(stringlength(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     string_length(Val1,Val).
