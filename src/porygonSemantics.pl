@@ -345,6 +345,7 @@ negate(true,false).
 negate(false,true).
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block command for conditionals %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 eval_blk_command(if(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     Val1 = true,
@@ -376,6 +377,7 @@ eval_blk_command(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block command for loop (traditional) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 eval_blk_command(for(Assign, BoolCondition, Valupdation, C), EVT, NEVT, Val):-
     eval_expr(Assign, EVT, EVT1, _),
     eval_forloop(BoolCondition, Valupdation, C, EVT1, NEVT, Val).
@@ -437,6 +439,7 @@ eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
     eval_blk_command(X,EVT,NEVT,Val).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% eval block for commandlist %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
     eval_plaincommand(X,EVT,EVT1,_Val1),
     eval_commandlist(Y,EVT1,UEVT,Val).
