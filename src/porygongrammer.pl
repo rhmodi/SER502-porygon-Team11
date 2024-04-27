@@ -1,4 +1,4 @@
-:-use_rendering(svgtree).
+%:-use_rendering(svgtree).
 :-table expr/3,factor/3,term/3,boolcondition/3, and_condition/3.
 
 %Programming block begins here
