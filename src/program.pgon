@@ -1,17 +1,10 @@
 {
 
 int i ;
+int a = '3';
 
-for(i=0;i<5;i++)
-{
-     if(i<3)
- {
-    print("something");
- }
- else{
-    print("nothing");
- }
+print(a);
 }
 
-}
+
     

@@ -154,11 +154,9 @@ def passing_tree_to_prolog(content):
     if any (prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)")):
         print("Execution: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
         print(Constants.PRINT_YELLOW_TEXT + "Your output:" + Constants.PRINT_NORMAL_TEXT)
-        for result in prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)"):
-            results.append(result) 
+       
     else :
-        print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
-   
+        print("Execution: "+Constants.PRINT_RED_TEXT + "     :(" + Constants.PRINT_NORMAL_TEXT)
     return results
 
 

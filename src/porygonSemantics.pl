@@ -9,9 +9,9 @@ hard_look_up(X,Env,Val):-
     hlu(X, FEnv, Val).
 
 hlu(X,[],_Val):-
-    write('Uninitialized variable: '),
-    write(X),
-    fail.
+    concat('Uninitialized variable: ',X,Str),
+    print_message(Str),
+    halt.
 
 hlu(HVar,[(HVar,HVal,_HType)|_T],HVal).
 
@@ -37,10 +37,10 @@ slu(X,[(HVar,_HVal,_HType)|T],Val):-
 
 update((Var, _Val, _Type), [_Variables, Const], _R):-
     soft_look_up(Var, Const, _SomeVal),
-    write('Cannot update Const '),
-    write(Var),
+    concat('Cannot update Const ',Var,Str),
+    print_message(Str),
     nl,
-    fail.
+    halt.
 update((Var, Val, Type), [Variables, Const], UpdatedEnv):-
     not(soft_look_up(Var, Const, _SomeVal)),
     update_var((Var, Val, Type), [Variables, Const], UpdatedEnv).
@@ -63,10 +63,11 @@ typecheckstring(X,Y):- atom(X),atom(Y).
 
 init_const((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
-    write('Const '),
-    write(Var),
-    write(' is already defined'),
-    fail.
+    concat("Const ",Var,Str),
+    concat(Str," is already defined",Str1),
+    print_message(Str1),
+
+    halt.
 init_const((Var,Val,Type),[Variables,[]],[Variables,[(Var,Val,Type)]]).
 init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]):-
     Const \= [].
@@ -76,11 +77,11 @@ init_const((Var,Val,Type),[Variables,Const],[Variables,[(Var,Val,Type)|Const]]):
 
 init_var((Var,_Val,_Type),Env,_):-
     soft_look_up(Var,Env, _SomeVal),
-    write('Variable '),
-    write(Var),
-    write(' is already defined'),
+    concat("Variable ",Var,Str),
+    concat(Str," is already defined",Str1),
+    print_message(Str1),
     nl,
-    fail.
+    halt.
 init_var((Var,Val,Type),[Const, []],[[(Var,Val,Type)], Const]):-
     not(soft_look_up(Var,[Const,[]], _SomeVal)).
 init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):-
@@ -88,57 +89,57 @@ init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Evaluation of keywords and expressions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 eval_assign(t_const_int_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Num),
     integer(Num),
     init_const((Var,Num,int),EVT2, UEVT)).
 eval_assign(t_const_float_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
     init_const((X,Flt,float),EVT2,UEVT)).
 eval_assign(t_const_str_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
     init_const((X,Str,str),EVT2,UEVT)).
 eval_assign(t_const_bool_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
     init_const((X,Bool,bool),EVT2,UEVT)).
 eval_assign(t_int(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Num),
     integer(Num),
     init_var((X,Num,int),EVT2, UEVT)).
 eval_assign(t_flt(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
     init_var((X,Flt,float),EVT2,UEVT)).
 eval_assign(t_str(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
     init_var((X,Str,str),EVT2,UEVT)).
 eval_assign(t_bool(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
     init_var((X,Bool,bool),EVT2,UEVT)).
 eval_assign(t_bool_decl(var(X)),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     init_var((X,false,bool),EVT,UEVT)).
 eval_assign(t_int_decl(var(X)),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     init_var((X,0,int),EVT,UEVT)).
 eval_assign(t_str_decl(var(X)),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     init_var((X,0,str),EVT,UEVT)).
 eval_assign(t_flt_decl(var(X)),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
     init_var((X,0.0,float),EVT,UEVT)).
 
 
@@ -152,57 +153,57 @@ eval_expr(addition(X,Y),EVT,NEVT,Val):-
     	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),concat(Val1,Val2,Val).
 %Halt
 eval_expr(addition(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,write("Incompatible Datatype while evaluating expressions").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)) ,print_message("Incompatible Datatype while evaluating expressions"),halt.
 
 eval_expr(subtraction(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1-Val2.
 
 %Halt
 eval_expr(subtraction(X,Y),EVT,NEVT,_Val):-
-    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),print_message("Operation Not possible on strings"),halt.
 %Halt
 eval_expr(subtraction(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),print_message("Incompatible Datatype while evaluating expressions"),halt.
 
 
 eval_expr(multiplication(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1*Val2.
 %Halt
 eval_expr(multiplication(X,Y),EVT,NEVT,_Val):-
-    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),print_message("Operation Not possible on strings"),halt.
 %Halt
 eval_expr(multiplication(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),print_message("Incompatible Datatype while evaluating expressions"),halt.
 
 
 %Halt
 eval_expr(division(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, write("Divide by 0 error").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, print_message("Divide by 0 error"),halt.
 
 eval_expr(division(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=\=0, Val is Val1/Val2.
 %Halt
 eval_expr(division(X,Y),EVT,NEVT,_Val):-
-    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),print_message("Operation Not possible on strings"),halt.
 %Halt
 eval_expr(division(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),print_message("Incompatible Datatype while evaluating expressions"),halt.
 
 
 
 %Halt
 eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0 , write("Modulus by 0 error").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0 , print_message("Modulus by 0 error"),halt.
 
 eval_expr(modulus(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, Val is Val1 mod Val2.
 
 %Halt
 eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
-    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),write("Operation Not possible on strings").
+    	eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheckstring(Val1,Val2),print_message("Operation Not possible on strings"),halt.
 %Halt
 eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),print_message("Incompatible Datatype while evaluating expressions"),halt.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% evaluation of various arithmetic operators %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,9 +466,13 @@ eval_decl(t_decl(X,Y),EVT,UEVT):-
 eval_decl(t_decl(X),EVT,UEVT):-
     eval_assign(X,EVT,UEVT).
 
-eval_block(t_blk(X,Y),EVT,UEVT,Val):-
+eval_block(t_blk(X,Y),EVT,UEVT,Val):-   
     eval_decl(X,EVT,EVT1),
     eval_commandlist(Y,EVT1,UEVT,Val),!.
+
+
+print_message(Str):- string_concat("ERROR: ",Str,Error),ansi_format([bold,fg(red)], Error, []).
+
 
 
 
