@@ -1,4 +1,4 @@
-:-use_rendering(svgtree).
+%:-use_rendering(svgtree).
 :-table expr/3,factor/3,term/3,boolcondition/3, and_condition/3.
 
 %Programming block begins here
@@ -111,7 +111,7 @@ boolcondition(or(X,Y))--> boolcondition(X),['or'],and_condition(Y).
 boolcondition(X) --> and_condition(X).
 and_condition(and(X,Y))--> and_condition(X),['and'],condition(Y).
 and_condition(X) --> condition(X).
-condition(not(X))--> ['not'],boolcondition(X).
+condition(not(X))--> ['not'],condition(X).
 condition(X)--> ['('],boolcondition(X),[')'].
 condition(InitAssign) --> initialassignment(InitAssign).
 %condition(not(Expression))--> ['not'], expr(Expression).
@@ -139,11 +139,11 @@ whilecommand(while(Condition,C))--> ['while'],['('],boolcondition(Condition), ['
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
-forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
+%forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-variableupdation(increment(Ops))--> increment_operation(Ops).
-variableupdation(decrement(Ops))--> decrement_operation(Ops).
-variableupdation(assignment(Assign))--> assignment(Assign).
+variableupdation((Ops))--> increment_operation(Ops).
+variableupdation((Ops))--> decrement_operation(Ops).
+variableupdation((Assign))--> assignment(Assign).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% increment and decrement operations%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 increment_operation(increment(Var)) --> variablename(Var),['++'].

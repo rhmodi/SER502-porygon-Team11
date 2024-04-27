@@ -1,6 +1,7 @@
 boolean(true).
 boolean(false).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% hard look up to check variables presence and return it %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hard_look_up(X,Env,Val):-
     flatten(Env, FEnv), %to include constant variables in search
     hlu(X, FEnv, Val).
@@ -16,6 +17,7 @@ hlu(X,[(HVar,_HVal,_HType)|T],Val):-
     X \= HVar,
     hlu(X,T,Val).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% soft look up to check variables presence  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 soft_look_up(X,Env,Val):-
     flatten(Env, FEnv), %to include constant variables in search
     slu(X, FEnv, Val).
@@ -28,6 +30,8 @@ slu(HVar,[(HVar,HVal,_HType)|_T],HVal).
 slu(X,[(HVar,_HVal,_HType)|T],Val):-
     X \= HVar,
     slu(X,T,Val).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% update to update variables %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 update((Var, _Val, _Type), [_Variables, Const], _R):-
     soft_look_up(Var, Const, _SomeVal),
@@ -49,6 +53,7 @@ update_var((Var, Val,Type), [[(SomeVar, SomeVal, SomeType)|T], Const], UpdatedEn
     update((Var, Val, Type), [T, Const], [UpdatedVar, Const]),
     UpdatedEnv = [[(SomeVar, SomeVal, SomeType)|UpdatedVar], Const].
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% type checking of datatypes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 typecheck(X,Y):- integer(X),integer(Y).
 typecheck(X,Y):- float(X),float(Y).
@@ -79,61 +84,64 @@ init_var((Var,Val,Type),[Const, []],[[(Var,Val,Type)], Const]):-
 init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):-
     not(soft_look_up(Var,[Variables,Const], _SomeVal)).
 
-eval_assign(t_const_int_e(X,Y),EVT, UEVT):-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Evaluation of keywords and expressions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+eval_assign(t_const_int_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
     eval_expr(X, EVT, EVT1, Var),
     eval_expr(Y, EVT1, EVT2, Num),
     integer(Num),
-    init_const((Var,Num,int),EVT2, UEVT).
-eval_assign(t_const_float_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Flt),
+    init_const((Var,Num,int),EVT2, UEVT)).
+eval_assign(t_const_float_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
-    init_const((Var,Flt,float),EVT2,UEVT).
-eval_assign(t_const_str_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Str),
+    init_const((X,Flt,float),EVT2,UEVT)).
+eval_assign(t_const_str_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
-    init_const((Var,Str,str),EVT2,UEVT).
-eval_assign(t_const_bool_e(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Bool),
+    init_const((X,Str,str),EVT2,UEVT)).
+eval_assign(t_const_bool_e(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
-    init_const((Var,Bool,bool),EVT2,UEVT).
-eval_assign(t_int(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Num),
+    init_const((X,Bool,bool),EVT2,UEVT)).
+eval_assign(t_int(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Num),
     integer(Num),
-    init_var((Var,Num,int),EVT2, UEVT).
-eval_assign(t_flt(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Flt),
+    init_var((X,Num,int),EVT2, UEVT)).
+eval_assign(t_flt(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
-    init_var((Var,Flt,float),EVT2,UEVT).
-eval_assign(t_str(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Str),
+    init_var((X,Flt,float),EVT2,UEVT)).
+eval_assign(t_str(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
-    init_var((Var,Str,str),EVT2,UEVT).
-eval_assign(t_bool(X,Y),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Bool),
+    init_var((X,Str,str),EVT2,UEVT)).
+eval_assign(t_bool(var(X),Y),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
-    init_var((Var,Bool,bool),EVT2,UEVT).
-eval_assign(t_bool_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,false,bool),EVT1,UEVT).
-eval_assign(t_int_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0,int),EVT1,UEVT).
-eval_assign(t_str_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0,str),EVT1,UEVT).
-eval_assign(t_flt_decl(X),EVT, UEVT):-
-    eval_expr(X, EVT, EVT1, Var),
-    init_var((Var,0.0,float),EVT1,UEVT).
+    init_var((X,Bool,bool),EVT2,UEVT)).
+eval_assign(t_bool_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,false,bool),EVT,UEVT)).
+eval_assign(t_int_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0,int),EVT,UEVT)).
+eval_assign(t_str_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0,str),EVT,UEVT)).
+eval_assign(t_flt_decl(var(X)),EVT, UEVT):-
+    (   soft_look_up(X,EVT,_Val) ->  write(X),write(" already defined"),nl;
+    init_var((X,0.0,float),EVT,UEVT)).
 
 
 % At the end add halt whenever we encounter incompatible
+% this acts as a layer of exception handling %%%%%
 
 eval_expr(addition(X,Y),EVT,NEVT,Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val is Val1+Val2.
@@ -195,6 +203,7 @@ eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), not(typecheck(Val1,Val2)),not(typecheckstring(Val1,Val2)),write("Incompatible Datatype while evaluating expressions").
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% evaluation of various arithmetic operators %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 eval_expr(square(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     Val is Val1**2.
@@ -215,35 +224,42 @@ eval_expr(exponent(X,Y),EVT,NEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,NEVT,Val2),
     Val is Val1**Val2.
+
 eval_expr(iassign(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,_Val),
     eval_expr(Y,EVT,EVT1,Val),
     update((X,Val,_),EVT1,NEVT).
+
 eval_expr(shassignadd(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
     eval_expr(addition(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
+
 eval_expr(shassignsub(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
     eval_expr(subtraction(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
+
 eval_expr(shassignmul(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
     eval_expr(multiplication(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
+
 eval_expr(shassigndiv(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
     eval_expr(division(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
+
 eval_expr(shassignmod(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
     eval_expr(modulus(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
+
 eval_expr(shassignexpo(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),
     eval_expr(Y,EVT,EVT1,Val2),
@@ -269,86 +285,133 @@ eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
     update((Var,Val,_),EVT1,NEVT).
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%% eval block variable lookup %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
 
+%%%%%%%%%%%%%%%%%%%%%%%% eval block for boolean %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 eval_condition(boolvalue(Bool),EVT,UEVT,Val):-
     eval_expr(Bool,EVT,UEVT,Val).
+
 eval_condition(greaterthan_orequalto(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1>=Val2 -> Val = true; Val = false).
+
 eval_condition(greaterthan(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1>Val2 -> Val = true; Val = false).
+
 eval_condition(lessthan_orequalto(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1=<Val2 -> Val = true; Val = false).
+
 eval_condition(lessthan(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1<Val2 -> Val = true; Val = false).
+
 eval_condition(notequalsto(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1\=Val2 -> Val = true; Val = false).
+
 eval_condition(equivalance(X,Y),EVT,UEVT,Val):-
     eval_expr(X,EVT,EVT1,Val1),
     eval_expr(Y,EVT1,UEVT,Val2),
     (Val1=Val2 -> Val = true; Val = false).
+
 eval_condition(or(X,Y),EVT,UEVT,Val):-
-    eval_expr(X,EVT,EVT1,Val1),
-    eval_expr(Y,EVT1,UEVT,Val2),
+    eval_condition(X,EVT,EVT1,Val1),
+    eval_condition(Y,EVT1,UEVT,Val2),
     ((Val1=true;Val2=true)->Val=true;Val=false).
+
 eval_condition(and(X,Y),EVT,UEVT,Val):-
-    eval_expr(X,EVT,EVT1,Val1),
-    eval_expr(Y,EVT1,UEVT,Val2),
+    eval_condition(X,EVT,EVT1,Val1),
+    eval_condition(Y,EVT1,UEVT,Val2),
     ((Val1=true,Val2=true)->Val=true;Val=false).
+
 eval_condition(not(X),EVT,UEVT,Val):-
-    eval_expr(X,EVT,UEVT,Val1),
+    eval_condition(X,EVT,UEVT,Val1),
     negate(Val1,Val).
 
 negate(true,false).
 negate(false,true).
 
-eval_if(if(X,Y),EVT,NEVT,Val):-
+%%%%%%%%%%%%%%%%%%%%%%%% eval block command for conditionals %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eval_blk_command(if(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     Val1 = true,
     eval_commandlist(Y,EVT1,NEVT,Val).
-eval_elseif(elseif(X,Y,Z),EVT,NEVT,Val):-
+eval_blk_command(elseif(X,Y,Z),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val);
-    eval_elseif(Z,EVT1,NEVT,Val)).
-eval_elseif(elseif(X,Y),EVT,NEVT,Val):-
+    eval_blk_command(Z,EVT1,NEVT,Val)).
+eval_blk_command(elseif(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     (Val1 = true ->  eval_commandlist(Y,EVT1,NEVT,Val)).
-eval_else(else(X),EVT,NEVT,Val):-
+eval_blk_command(else(X),EVT,NEVT,Val):-
     eval_commandlist(X,EVT,NEVT,Val).
 
-eval_ifelsecommand(ifelse(X,_Y),EVT,NEVT,Val):-
-    eval_if(X,EVT,NEVT,Val).
-eval_ifelsecommand(ifelse(X,Y),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    eval_else(Y,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, _Y, _Z),EVT,NEVT,Val):-
-    eval_if(X,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, Y, _Z),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    eval_elseif(Y,EVT,NEVT,Val).
-eval_ifelseladdercommand(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
-    not(eval_if(X,EVT,_EVT1,_Val1)),
-    not(eval_elseif(Y,EVT,NEVT,Val)),
-    eval_else(Z,EVT,NEVT,Val).
+eval_blk_command(ifelse(X,_Y),EVT,NEVT,Val):-
+    eval_blk_command(X,EVT,NEVT,Val).
+eval_blk_command(ifelse(X,Y),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    eval_blk_command(Y,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, _Y, _Z),EVT,NEVT,Val):-
+    eval_blk_command(X,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, Y, _Z),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    eval_blk_command(Y,EVT,NEVT,Val).
+eval_blk_command(ifelseladder(X, Y, Z),EVT,NEVT,Val):-
+    not(eval_blk_command(X,EVT,_EVT1,_Val1)),
+    not(eval_blk_command(Y,EVT,NEVT,Val)),
+    eval_blk_command(Z,EVT,NEVT,Val).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%% eval block command for loop (traditional) and for in range %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eval_blk_command(for(Assign, BoolCondition, Valupdation, C), EVT, NEVT, Val):-
+    eval_expr(Assign, EVT, EVT1, _),
+    eval_forloop(BoolCondition, Valupdation, C, EVT1, NEVT, Val).
+
+eval_blk_command(forinrange(Var,Sr,Er,Command),EVT,NEVT,Val):-
+    eval_expr(Sr,EVT,EVT1,Val1),
+    eval_expr(Er,EVT1,EVT2,Val2),
+    eval_blk_command(for(assign(iassign(Var,num(Val1))),lessthan(Var,num(Val2)),increment(Var),Command),
+                     EVT2,NEVT,Val).
+
+eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
+    eval_condition(BoolCondition, EVT, EVT1, BoolVal),
+    (BoolVal == true ->  
+        eval_commandlist(C, EVT1, EVT2, _),
+        eval_expr(Valupdation, EVT2, EVT3, _),
+        eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
+    ;
+        NEVT = EVT,
+        Val = false).
+
+%%%%%%%%%%%%%%%%%%%%%%%% eval block for traditional while loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+eval_whilecommand(while(X,Y),EVT,NEVT,Val):-
+    eval_condition(X,EVT,EVT1,Val1),
+    (Val1 = true ->  
+        eval_commandlist(Y,EVT1,EVT2,_Val2),
+        eval_whilecommand(while(X,Y),EVT2,NEVT,Val)
+    ;
+        NEVT = EVT,
+        Val = false
+    ).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%% eval block for plain assignment, increment, ternary, decrement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_plaincommand(plain_assign(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
@@ -361,12 +424,21 @@ eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
 eval_plaincommand(plain_print(X),EVT,NEVT,Val):-
     eval_print(X,EVT,NEVT,Val),
     write(Val).
+eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
+    eval_stringlength(X,EVT,NEVT,Val).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% eval block for print and stringlength %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 eval_print(print(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
+eval_stringlength(stringlength(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val1),
+    string_length(Val1,Val).
 
 eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
-    eval_blockcommand(X,EVT,NEVT,Val).
+    eval_blk_command(X,EVT,NEVT,Val).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% eval block for commandlist %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
     eval_plaincommand(X,EVT,EVT1,_Val1),
@@ -378,3 +450,8 @@ eval_commandlist(t_cmd(X,Y), EVT, UEVT, Val):-
     eval_commandlist(Y,EVT1,UEVT,Val).
 eval_commandlist(t_cmd(X), EVT, UEVT, Val):-
     eval_blockcommand(X,EVT,UEVT,Val).
+
+
+
+
+
