@@ -1,3 +1,5 @@
+
+
 boolean(true).
 boolean(false).
 
@@ -391,15 +393,6 @@ eval_blk_command(forinrange(Var,Sr,Er,Command),EVT,NEVT,Val):-
     eval_blk_command(for(assign(iassign(Var,num(Val1))),lessthan(Var,num(Val2)),increment(Var),Command),
                      EVT2,NEVT,Val).
 
-eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
-    eval_condition(BoolCondition, EVT, EVT1, BoolVal),
-    (BoolVal == true ->  
-        eval_commandlist(C, EVT1, EVT2, _),
-        eval_expr(Valupdation, EVT2, EVT3, _),
-        eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
-    ;
-        NEVT = EVT,
-        Val = false),!.
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for traditional while loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -412,6 +405,17 @@ eval_blk_command(while(X,Y),EVT,NEVT,Val):-
         NEVT = EVT,
         Val = false
     ),!.
+
+
+eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
+    eval_condition(BoolCondition, EVT, EVT1, BoolVal),
+    (BoolVal == true ->  
+        eval_commandlist(C, EVT1, EVT2, _),
+        eval_expr(Valupdation, EVT2, EVT3, _),
+        eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
+    ;
+        NEVT = EVT,
+        Val = false),!.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for plain assignment, increment, ternary, decrement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

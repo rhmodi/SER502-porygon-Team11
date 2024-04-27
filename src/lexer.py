@@ -139,10 +139,25 @@ def passing_tokens_to_prolog(content):
     results = [] 
     if any (prolog.query("block(T, " + content + ", [])")):
         print("Parse tree generation: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
+        
         for result in prolog.query("block(T, " + content + ", [])"):
-            results.append(result) #After evalutor print JUST IT WILL EVALUATE results
+            results.append(result) 
     else :
         print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+   
+    return results
+
+def passing_tree_to_prolog(content):
+    prolog = Prolog()
+    prolog.consult("porygonSemantics.pl")   
+    results = [] 
+    if any (prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)")):
+        print("Execution: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
+        print(Constants.PRINT_YELLOW_TEXT + "Your output:" + Constants.PRINT_NORMAL_TEXT)
+        for result in prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)"):
+            results.append(result) 
+    else :
+        print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
    
     return results
 
@@ -160,9 +175,7 @@ if __name__ == '__main__':
     data = read_input_file(output_filename, 0)
     results = passing_tokens_to_prolog(data)
     tree = ''.join(results[0].get('T'))
-    # print(tree)    
+    final_results = passing_tree_to_prolog(tree)
 
-    # should_evaluate = parsed_args.evaluate
-    # print(should_evaluate)
-    # if should_evaluate:
-    #     os.system("swipl -g \"main('" + output_filename + "')\" main.pl")
+
+    
