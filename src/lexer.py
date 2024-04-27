@@ -22,7 +22,7 @@ class PgonLexer(Lexer):
               INC, DEC, EQ, GE, LE, NE,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
-              IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
+              IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, PRINTNL, STRLEN,
               ADD_SHORTHAND, SUB_SHORTHAND, MUL_SHORTHAND, DIV_SHORTHAND, MOD_SHORTHAND, EXP_SHORTHAND}
 
     # LITERALS
@@ -59,6 +59,7 @@ class PgonLexer(Lexer):
     ID['in'] = IN
     ID['range'] = RANGE
     ID['print'] = PRINT
+    ID['printnl'] = PRINTNL
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'
@@ -144,6 +145,7 @@ def passing_tokens_to_prolog(content):
             results.append(result) 
     else :
         print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+        exit(1)
    
     return results
 
@@ -157,6 +159,7 @@ def passing_tree_to_prolog(content):
        
     else :
         print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+        exit(1)
     return results
 
 

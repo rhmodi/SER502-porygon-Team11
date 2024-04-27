@@ -165,6 +165,7 @@ ternary(ternary(Bool,Expr1,Expr2))-->['('], boolcondition(Bool),[')'],['?'],expr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRINT STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
+printStmt(printnl(Print))--> ['printnl'],['('],expr(Print),[')'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING LENGTH STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
@@ -192,6 +193,7 @@ boolvalue(bool(false))--> ['false'].
 variablename(var(Atom)) -->
     [Atom],
     {\+ member(Atom, ['const','int','string','float','bool','true','false','if','elif','else', 'for', 'in','range','while'])},
+    {\+number(Atom)},
     { atom_chars(Atom, [First|RestChars]) },
     { code_type(First, lower) },
     {restOfVariableName(RestChars)}.

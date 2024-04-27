@@ -82,8 +82,8 @@ init_var((Var,_Val,_Type),Env,_):-
     print_message(Str1),
     nl,
     halt.
-init_var((Var,Val,Type),[Const, []],[[(Var,Val,Type)], Const]):-
-    not(soft_look_up(Var,[Const,[]], _SomeVal)).
+init_var((Var,Val,Type),[[], Const],[[(Var,Val,Type)], Const]):-
+    not(soft_look_up(Var,[[], Const], _SomeVal)).
 init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):-
     not(soft_look_up(Var,[Variables,Const], _SomeVal)).
 
@@ -400,7 +400,7 @@ eval_blk_command(forinrange(Var,Sr,Er,Command),EVT,NEVT,Val):-
 
 eval_blk_command(while(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
-    (Val1 = true ->  
+    (Val1 = true ->
         eval_commandlist(Y,EVT1,EVT2,_Val2),
     eval_blk_command(while(X,Y),EVT2,NEVT,Val)
     ;
@@ -411,7 +411,7 @@ eval_blk_command(while(X,Y),EVT,NEVT,Val):-
 
 eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
     eval_condition(BoolCondition, EVT, EVT1, BoolVal),
-    (BoolVal == true ->  
+    (BoolVal == true ->
         eval_commandlist(C, EVT1, EVT2, _),
         eval_expr(Valupdation, EVT2, EVT3, _),
         eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
@@ -431,15 +431,19 @@ eval_plaincommand(plain_increment(X),EVT,NEVT,Val):-
 eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
 eval_plaincommand(plain_print(X),EVT,NEVT,Val):-
-    eval_print(X,EVT,NEVT,Val),
-    write(Val).
+    eval_print(X,EVT,NEVT,Val).
 eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
     eval_stringlength(X,EVT,NEVT,Val).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% eval block for print and stringlength %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_print(print(X),EVT,NEVT,Val):-
-    eval_expr(X,EVT,NEVT,Val).
+    eval_expr(X,EVT,NEVT,Val),
+    write(Val).
+eval_print(printnl(X),EVT,NEVT,Val):-
+    eval_expr(X,EVT,NEVT,Val),
+    write(Val),
+    nl.
 eval_stringlength(stringlength(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     string_length(Val1,Val).
@@ -467,7 +471,7 @@ eval_decl(t_decl(X,Y),EVT,UEVT):-
 eval_decl(t_decl(X),EVT,UEVT):-
     eval_assign(X,EVT,UEVT).
 
-eval_block(t_blk(X,Y),EVT,UEVT,Val):-   
+eval_block(t_blk(X,Y),EVT,UEVT,Val):-
     eval_decl(X,EVT,EVT1),
     eval_commandlist(Y,EVT1,UEVT,Val),!.
 
