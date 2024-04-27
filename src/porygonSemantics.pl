@@ -440,6 +440,8 @@ eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
 
 eval_print(print(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val).
+eval_print(print(X),EVT,NEVT,Val):-
+    eval_condition(X,EVT,NEVT,Val).
 eval_stringlength(stringlength(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     string_length(Val1,Val).
