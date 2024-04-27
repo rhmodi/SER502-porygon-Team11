@@ -396,7 +396,7 @@ eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
         eval_forloop(BoolCondition, Valupdation, C, EVT3, NEVT, Val)
     ;
         NEVT = EVT,
-        Val = false).
+        Val = false),!.
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for traditional while loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -408,7 +408,7 @@ eval_whilecommand(while(X,Y),EVT,NEVT,Val):-
     ;
         NEVT = EVT,
         Val = false
-    ).
+    ),!.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for plain assignment, increment, ternary, decrement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
