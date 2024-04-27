@@ -455,6 +455,15 @@ eval_commandlist(t_cmd(X), EVT, UEVT, Val):-
     eval_blockcommand(X,EVT,UEVT,Val).
 
 
+eval_decl(t_decl(X,Y),EVT,UEVT):-
+    eval_assign(X,EVT,EVT1),
+    eval_decl(Y,EVT1,UEVT).
+eval_decl(t_decl(X),EVT,UEVT):-
+    eval_assign(X,EVT,UEVT).
+
+eval_block(t_blk(X,Y),EVT,UEVT,Val):-
+    eval_decl(X,EVT,EVT1),
+    eval_commandlist(Y,EVT1,UEVT,Val).
 
 
 
