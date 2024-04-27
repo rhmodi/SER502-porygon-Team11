@@ -403,11 +403,11 @@ eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for traditional while loop %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-eval_whilecommand(while(X,Y),EVT,NEVT,Val):-
+eval_blk_command(while(X,Y),EVT,NEVT,Val):-
     eval_condition(X,EVT,EVT1,Val1),
     (Val1 = true ->  
         eval_commandlist(Y,EVT1,EVT2,_Val2),
-        eval_whilecommand(while(X,Y),EVT2,NEVT,Val)
+    eval_blk_command(while(X,Y),EVT2,NEVT,Val)
     ;
         NEVT = EVT,
         Val = false
@@ -463,7 +463,7 @@ eval_decl(t_decl(X),EVT,UEVT):-
 
 eval_block(t_blk(X,Y),EVT,UEVT,Val):-
     eval_decl(X,EVT,EVT1),
-    eval_commandlist(Y,EVT1,UEVT,Val).
+    eval_commandlist(Y,EVT1,UEVT,Val),!.
 
 
 
