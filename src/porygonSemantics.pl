@@ -380,6 +380,12 @@ eval_blk_command(for(Assign, BoolCondition, Valupdation, C), EVT, NEVT, Val):-
     eval_expr(Assign, EVT, EVT1, _),
     eval_forloop(BoolCondition, Valupdation, C, EVT1, NEVT, Val).
 
+eval_blk_command(forinrange(Var,Sr,Er,Command),EVT,NEVT,Val):-
+    eval_expr(Sr,EVT,EVT1,Val1),
+    eval_expr(Er,EVT1,EVT2,Val2),
+    eval_blk_command(for(assign(iassign(Var,num(Val1))),lessthan(Var,num(Val2)),increment(Var),Command),
+                     EVT2,NEVT,Val).
+
 eval_forloop(BoolCondition, Valupdation, C, EVT, NEVT, Val):-
     eval_condition(BoolCondition, EVT, EVT1, BoolVal),
     (BoolVal == true ->  
