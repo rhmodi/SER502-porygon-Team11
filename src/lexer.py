@@ -7,8 +7,6 @@ from sly import Lexer
 from pyswip import Prolog
 
 
-
-
 class Constants:
     TOKEN_FILE_EXTENSION = 'pgontokens'
     PRINT_GREEN_TEXT = '\033[92m'
@@ -20,8 +18,7 @@ class Constants:
 # Reference: https://sly.readthedocs.io/en/latest/sly.html
 class PgonLexer(Lexer):
     # SET OF TOKENS
-    tokens = {FLOAT, ID, NUMBER, 
-              #STRING, 
+    tokens = {FLOAT, ID, NUMBER, STRING_VALUE, 
               INC, DEC, EQ, GE, LE, NE,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
@@ -30,7 +27,7 @@ class PgonLexer(Lexer):
 
     # LITERALS
     literals = {'{', '}', '?', ';', ':', '(', ')','=',
-                '/','*','+','-','%','^','"','<','>',','}
+                '/','*','+','-','%','^','<','>',','}
 
     # IGNORE
     ignore = ' \t'
@@ -65,7 +62,7 @@ class PgonLexer(Lexer):
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'
-    # STRING = r'\".*\"'
+    # STRING_VALUE = r'(?:\").*(?:\")'
     INC = r'\+\+'
     DEC = r'--'
     EQ = r'=='
@@ -90,7 +87,10 @@ class PgonLexer(Lexer):
         t.value = int(t.value)
         return t
 
-
+    @_(r'\".*\"')
+    def STRING_VALUE(self, t):
+        t.value = t.value.replace('\"','')
+        return t
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -118,7 +118,13 @@ def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
         allTokens = []
         for token in tokens:
-            allTokens.append(token.value)
+            # print(type(token.type))
+            if token.type == 'STRING_VALUE':
+                allTokens.append('"')
+                allTokens.append(token.value)
+                allTokens.append('"')
+            else:
+                allTokens.append(token.value)
         file.write('{}'.format(allTokens))
         
         print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
