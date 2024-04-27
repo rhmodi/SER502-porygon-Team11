@@ -196,7 +196,7 @@ eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
         eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0 , print_message("Modulus by 0 error"),halt.
 
 eval_expr(modulus(X,Y),EVT,NEVT,Val):-
-        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),Val2=:=0, Val is Val1 mod Val2.
+        eval_expr(X,EVT,EVT1,Val1),eval_expr(Y,EVT1,NEVT,Val2), typecheck(Val1,Val2),not(Val2=:=0), Val is Val1 mod Val2.
 
 %Halt
 eval_expr(modulus(X,Y),EVT,NEVT,_Val):-
