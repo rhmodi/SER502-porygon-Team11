@@ -156,8 +156,12 @@ def passing_tree_to_prolog(content):
         print(Constants.PRINT_YELLOW_TEXT + "Your output:" + Constants.PRINT_NORMAL_TEXT)
        
     else :
-        print("Execution: "+Constants.PRINT_RED_TEXT + "     :(" + Constants.PRINT_NORMAL_TEXT)
+        print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
     return results
+
+
+
+
 
 
 
@@ -167,13 +171,27 @@ if __name__ == '__main__':
     input_filename = parsed_args.input[0]
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
     file_data = read_input_file(input_filename, 1)
-    lexer = PgonLexer()
-    tokens = lexer.tokenize(file_data)
-    write_tokens_to_file(tokens, output_filename)
-    data = read_input_file(output_filename, 0)
-    results = passing_tokens_to_prolog(data)
-    tree = ''.join(results[0].get('T'))
-    final_results = passing_tree_to_prolog(tree)
+    try:
+        lexer = PgonLexer()
+        tokens = lexer.tokenize(file_data)
+        write_tokens_to_file(tokens, output_filename)
+        data = read_input_file(output_filename, 0)
+        results = passing_tokens_to_prolog(data)
+        tree = ''.join(results[0].get('T'))
+        final_results = passing_tree_to_prolog(tree)
+      
+    except Exception as e:
+             print(Constants.PRINT_RED_TEXT + "SYNTAX ERROR !!!! \nERROR: " + Constants.PRINT_NORMAL_TEXT +str(e))
+        
+
+        
+
+        
+        
+
+    
+        
+    
 
 
     

@@ -1,9 +1,8 @@
 {
 
-int i ;
-int a = '3';
-
-print(a);
+int a=0;
+a=6;
+print(true and false);
 }
 
 

@@ -287,6 +287,7 @@ eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
     Val is Val1-1,
     update((Var,Val,_),EVT1,NEVT).
 
+% eval_expr(X,EVT,NEVT,Val):- eval_condition(X,EVT,NEVT,Val).
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block variable lookup %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

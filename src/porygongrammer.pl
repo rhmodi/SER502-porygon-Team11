@@ -99,6 +99,8 @@ exponent(B) --> boolvalue(B).
 exponent(S) -->stringvalue(S).
 exponent(I)--> increment_operation(I).
 exponent(Dec)--> decrement_operation(Dec).
+% exponent(B) --> boolcondition(B).
+
 
 square(square(S))--> ['sq'],['('],expr(S),[')'].
 squareRoot(squareroot(Sr))--> ['sqrt'],['('],expr(Sr),[')'].
