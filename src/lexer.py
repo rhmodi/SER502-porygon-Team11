@@ -102,15 +102,16 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def read_input_file(filename):
+def read_input_file(filename, num):
     data = None
    
     try:
         with open(filename, "r") as input_file:
             data = input_file.read()
     except FileNotFoundError:
-        print("No such file in path:", sys.argv[1])
-    print("Reading Source Code: " + Constants.PRINT_GREEN_TEXT + 'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
+        print("No such file exists in path:", sys.argv[1])
+    if(num == 1):
+        print("Reading your program: " + Constants.PRINT_GREEN_TEXT + 'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
     return data
 
 
@@ -127,8 +128,8 @@ def write_tokens_to_file(tokens, filename):
                 allTokens.append(token.value)
         file.write('{}'.format(allTokens))
         
-        print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
-              'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
+        print("Lexical analysis: " + Constants.PRINT_GREEN_TEXT +
+              'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
 
 
 
@@ -137,29 +138,29 @@ def passing_tokens_to_prolog(content):
     prolog.consult("porygongrammer.pl")   
     results = [] 
     if any (prolog.query("block(T, " + content + ", [])")):
-        print("PARSE TREE GENERATION: "+Constants.PRINT_GREEN_TEXT + "SUCCESSFUL" + Constants.PRINT_NORMAL_TEXT)
+        print("Parse tree generation: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
         for result in prolog.query("block(T, " + content + ", [])"):
             results.append(result) #After evalutor print JUST IT WILL EVALUATE results
     else :
-        print("PARSE TREE GENERATION: "+Constants.PRINT_RED_TEXT + "FAILURE" + Constants.PRINT_NORMAL_TEXT)
+        print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
    
     return results
 
 
 
 if __name__ == '__main__':
-    print(Constants.PRINT_YELLOW_TEXT + "Starting Lexer" + Constants.PRINT_NORMAL_TEXT)
+    print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
-    print(parsed_args)
     input_filename = parsed_args.input[0]
     output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
-    file_data = read_input_file(input_filename)
+    file_data = read_input_file(input_filename, 1)
     lexer = PgonLexer()
     tokens = lexer.tokenize(file_data)
     write_tokens_to_file(tokens, output_filename)
-    data = read_input_file(output_filename)
+    data = read_input_file(output_filename, 0)
     results = passing_tokens_to_prolog(data)
-    print(results)    
+    tree = ''.join(results[0].get('T'))
+    # print(tree)    
 
     # should_evaluate = parsed_args.evaluate
     # print(should_evaluate)
