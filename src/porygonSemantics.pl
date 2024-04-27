@@ -294,6 +294,9 @@ eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
 
 %%%%%%%%%%%%%%%%%%%%%%%% eval block for boolean %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+eval_condition(bool(X),EVT,UEVT,Val):-
+    eval_expr(bool(X),EVT,UEVT,Val).
+
 eval_condition(boolvalue(Bool),EVT,UEVT,Val):-
     eval_expr(Bool,EVT,UEVT,Val).
 
