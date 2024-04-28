@@ -1,0 +1,22 @@
+{
+    int i;
+    int j;
+    string s = "*";
+    for(i=0;i<5;i++){
+        s = "*";
+        for(j=0;j < 2*i;j++){
+            s= s + "*";
+        }
+        printnl(s);
+    }
+    for(i=4;i>=0;i--){
+        s = "*";
+        for(j=0;j < 2*i;j++){
+            s= s + "*";
+        }
+        printnl(s);
+    }
+}
+
+
+

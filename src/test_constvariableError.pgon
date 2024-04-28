@@ -1,0 +1,5 @@
+{
+    const int a = 25;
+    a = 35;
+    print(a);
+}

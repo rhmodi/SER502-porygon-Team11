@@ -1,0 +1,13 @@
+{
+   
+    int h = 2^3;
+   
+    int e = sq(1);
+    int f = cube(8);
+    float g = cbrt(f);
+    printnl(g);
+    printnl(f);
+   
+    printnl(h);
+
+}

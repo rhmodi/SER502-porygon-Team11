@@ -1,0 +1,25 @@
+{
+    int i;
+    int e = 2*5;
+    int j;
+    for i in range (0,e)
+    {
+      if((i mod 2) == 0)
+      {
+        for(j=0;j<i;j++)
+       {
+         print("*");
+       } 
+      }  
+      else
+      {
+        for(j=0;j<i;j++)
+       {
+         print("+");
+       } 
+      }
+       
+       printnl("");
+
+    }
+}

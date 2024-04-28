@@ -1,7 +1,12 @@
 import os
+os.environ['SWI_HOME_DIR'] = 'C:\\Program Files\\swipl'
 import sys
 import argparse
 from sly import Lexer
+import ast
+import re
+
+from pyswip import Prolog
 
 
 class Constants:
@@ -9,12 +14,14 @@ class Constants:
     PRINT_GREEN_TEXT = '\033[92m'
     PRINT_NORMAL_TEXT = '\033[0m'
     PRINT_YELLOW_TEXT = '\033[93m'
+    PRINT_RED_TEXT = '\033[91m'
 
 
 # Reference: https://sly.readthedocs.io/en/latest/sly.html
 class PgonLexer(Lexer):
     # SET OF TOKENS
-    tokens = {FLOAT, ID, NUMBER, STRING, INC, DEC, EQ, GE, LE, NE,
+    tokens = {FLOAT, ID, NUMBER, STRING_VALUE, 
+              INC, DEC, EQ, GE, LE, NE, MOD, PRINTNL,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
               IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
@@ -22,7 +29,7 @@ class PgonLexer(Lexer):
 
     # LITERALS
     literals = {'{', '}', '?', ';', ':', '(', ')','=',
-                '/','*','+','-','%','^','"','<','>',','}
+                '/','*','+','-','%','^','<','>',','}
 
     # IGNORE
     ignore = ' \t'
@@ -41,6 +48,7 @@ class PgonLexer(Lexer):
     ID['cbrt'] = CBRT
     ID['sq'] = SQ
     ID['cube'] = CUBE
+    ID['mod'] = MOD
     ID['and'] = AND
     ID['or'] = OR
     ID['not'] = NOT
@@ -54,10 +62,11 @@ class PgonLexer(Lexer):
     ID['in'] = IN
     ID['range'] = RANGE
     ID['print'] = PRINT
+    ID['printnl'] = PRINTNL
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'
-    STRING = r'\".*\"'
+    # STRING_VALUE = r'(?:\").*(?:\")'
     INC = r'\+\+'
     DEC = r'--'
     EQ = r'=='
@@ -82,6 +91,11 @@ class PgonLexer(Lexer):
         t.value = int(t.value)
         return t
 
+    @_(r'\".*\"')
+    def STRING_VALUE(self, t):
+        t.value = t.value.replace('\"','')
+        return t
+    
 
 
 def parse_arguments():
@@ -94,46 +108,108 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def read_input_file(filename):
+def read_input_file(filename, num):
     data = None
    
     try:
         with open(filename, "r") as input_file:
             data = input_file.read()
     except FileNotFoundError:
-        print("No such file in path:", sys.argv[1])
-    print("Reading Source Code: " + Constants.PRINT_GREEN_TEXT + 'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
+        print(Constants.PRINT_RED_TEXT + "No such file exists in path: "+  sys.argv[1] + Constants.PRINT_NORMAL_TEXT)
+        return data
+    if(num == 1):
+        print("Reading your program: " + Constants.PRINT_GREEN_TEXT + 'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
     return data
 
+def replace_str_with_single_quotes(text):
+    pattern = r'(\bstr\((.*?)\))'
+    
+    return re.sub(pattern, lambda match: f"str('{match.group(2)}')", text)
 
 def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
         allTokens = []
         for token in tokens:
-            allTokens.append(token.value)
+            if token.type == 'STRING_VALUE':
+                allTokens.append('"')
+                allTokens.append(token.value)
+                allTokens.append('"')
+            else:
+                allTokens.append(token.value)
         file.write('{}'.format(allTokens))
         
-        print("Writing Tokens in " + filename + ": " + Constants.PRINT_GREEN_TEXT +
-              'SUCCESSFUL' + Constants.PRINT_NORMAL_TEXT)
+        print("Lexical analysis: " + Constants.PRINT_GREEN_TEXT +
+              'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
+
+
+
+def passing_tokens_to_prolog(content):
+    prolog = Prolog()
+    prolog.consult("porygongrammer.pl")   
+    results = [] 
+    if any (prolog.query("block(T, " + content + ", [])")):
+        print("Parse tree generation: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
+        
+        for result in prolog.query("block(T, " + content + ", [])"):
+            results.append(result) 
+    else :
+        print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+    return results
+
+def passing_tree_to_prolog(content):
+    prolog = Prolog()
+    prolog.consult("porygonSemantics.pl")   
+    results = [] 
+    print(Constants.PRINT_YELLOW_TEXT + "Output:" + Constants.PRINT_NORMAL_TEXT)
+    if any (prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)")):
+        print("Execution: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
+        
+       
+    else :
+        print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+    return results
+
+
+    
+
+
+
+
+
 
 
 if __name__ == '__main__':
-    print(Constants.PRINT_YELLOW_TEXT + "Starting Lexer" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
-    print(parsed_args)
     input_filename = parsed_args.input[0]
-    # print("Input file",input_filename)
-    output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
-    # print("Output file",output_filename)
-    file_data = read_input_file(input_filename)
-    # print("File Data", file_data)
-    lexer = PgonLexer()
-    # print("LExer",lexer)
-    tokens = lexer.tokenize(file_data)
-    # print("Tokens",tokens)
-    write_tokens_to_file(tokens, output_filename)
+    output_filename = "program" + Constants.TOKEN_FILE_EXTENSION 
+    file_data = read_input_file(input_filename, 1)
+    if(file_data != None):
+        print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
 
-    should_evaluate = parsed_args.evaluate
-    print(should_evaluate)
-    if should_evaluate:
-        os.system("swipl -g \"main('" + output_filename + "')\" main.pl")
+        try:
+            lexer = PgonLexer()
+            tokens = lexer.tokenize(file_data)
+            write_tokens_to_file(tokens, output_filename)
+            data = read_input_file(output_filename, 0)
+            results = passing_tokens_to_prolog(data)
+            
+            tree = ''.join(results[0].get('T'))
+            processed_data = replace_str_with_single_quotes(tree)
+
+            final_results = passing_tree_to_prolog(processed_data)
+        
+        except Exception as e:
+                print(Constants.PRINT_RED_TEXT + "SYNTAX ERROR !!!! \nERROR: " + Constants.PRINT_NORMAL_TEXT +str(e))
+        
+
+        
+
+        
+        
+
+    
+        
+    
+
+
+    

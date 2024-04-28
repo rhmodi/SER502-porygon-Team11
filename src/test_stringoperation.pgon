@@ -1,0 +1,14 @@
+{
+    string s;
+    string firstName = "Virat";
+    string lastName = " Kohli";
+
+    string fullName = firstName+lastName;
+    int len = strlen(fullName);
+    print("Default Value: ");
+    printnl(s);
+    printnl("Name: "+fullName);
+    print("Length: ");
+    printnl(len);
+
+}

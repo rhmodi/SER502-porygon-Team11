@@ -1,0 +1,16 @@
+{
+    int a = 25;
+    int b = a++;
+    int c = a--;
+    a+=25;
+    printnl(a);
+    a^=2;
+   
+
+    printnl(a);
+    printnl(b);
+    printnl(c);
+    
+
+
+}
