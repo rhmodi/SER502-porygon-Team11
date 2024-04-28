@@ -110,7 +110,9 @@ def parse_arguments():
 
 def read_input_file(filename, num):
     data = None
-   
+    if (num == 1) and not(filename.endswith(".pgon")):
+        print(Constants.PRINT_RED_TEXT + "This is not a Porygon file: "+  sys.argv[1] + Constants.PRINT_NORMAL_TEXT)
+        return data
     try:
         with open(filename, "r") as input_file:
             data = input_file.read()
