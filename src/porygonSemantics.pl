@@ -89,38 +89,38 @@ init_var((Var,Val,Type),[Variables,Const],[[(Var,Val,Type) |Variables], Const]):
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% Evaluation of keywords and expressions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 eval_assign(t_const_int_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
-    eval_expr(X, EVT, EVT1, Var),
-    eval_expr(Y, EVT1, EVT2, Num),
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
+    eval_expr(Y, EVT, EVT2, Num),
     integer(Num),
-    init_const((Var,Num,int),EVT2, UEVT)).
+    init_const((X,Num,int),EVT2, UEVT)).
 eval_assign(t_const_float_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
     init_const((X,Flt,float),EVT2,UEVT)).
 eval_assign(t_const_str_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
     init_const((X,Str,str),EVT2,UEVT)).
 eval_assign(t_const_bool_e(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Bool),
     boolean(Bool),
     init_const((X,Bool,bool),EVT2,UEVT)).
 eval_assign(t_int(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Num),
-    integer(Num),
+    print_message("Login"),
+(integer(Num) -> true;concat("Expected int but found ",Num,Z),print_message(Z),halt),
     init_var((X,Num,int),EVT2, UEVT)).
 eval_assign(t_flt(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Flt),
     float(Flt),
     init_var((X,Flt,float),EVT2,UEVT)).
 eval_assign(t_str(var(X),Y),EVT, UEVT):-
-    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Y),print_message(Y),nl,halt;
+    (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Str),
     atom(Str),
     init_var((X,Str,str),EVT2,UEVT)).

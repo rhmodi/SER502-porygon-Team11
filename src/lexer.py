@@ -22,7 +22,7 @@ class PgonLexer(Lexer):
               INC, DEC, EQ, GE, LE, NE,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
-              IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, PRINTNL, STRLEN,
+              IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
               ADD_SHORTHAND, SUB_SHORTHAND, MUL_SHORTHAND, DIV_SHORTHAND, MOD_SHORTHAND, EXP_SHORTHAND}
 
     # LITERALS
@@ -59,7 +59,6 @@ class PgonLexer(Lexer):
     ID['in'] = IN
     ID['range'] = RANGE
     ID['print'] = PRINT
-    ID['printnl'] = PRINTNL
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'
@@ -145,21 +144,20 @@ def passing_tokens_to_prolog(content):
             results.append(result) 
     else :
         print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
-        exit(1)
-   
+    print(results)
     return results
 
 def passing_tree_to_prolog(content):
     prolog = Prolog()
     prolog.consult("porygonSemantics.pl")   
     results = [] 
+    print(Constants.PRINT_YELLOW_TEXT + "Output:" + Constants.PRINT_NORMAL_TEXT)
     if any (prolog.query("eval_block(" + content + ",[[],[]], NEnv, Val)")):
         print("Execution: "+Constants.PRINT_GREEN_TEXT + "SUCCESS!" + Constants.PRINT_NORMAL_TEXT)
-        print(Constants.PRINT_YELLOW_TEXT + "Your output:" + Constants.PRINT_NORMAL_TEXT)
+        
        
     else :
         print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
-        exit(1)
     return results
 
 
