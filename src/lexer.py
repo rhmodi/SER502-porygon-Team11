@@ -21,7 +21,7 @@ class Constants:
 class PgonLexer(Lexer):
     # SET OF TOKENS
     tokens = {FLOAT, ID, NUMBER, STRING_VALUE, 
-              INC, DEC, EQ, GE, LE, NE,
+              INC, DEC, EQ, GE, LE, NE, MOD, PRINTNL,
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
               IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
@@ -48,6 +48,7 @@ class PgonLexer(Lexer):
     ID['cbrt'] = CBRT
     ID['sq'] = SQ
     ID['cube'] = CUBE
+    ID['mod'] = MOD
     ID['and'] = AND
     ID['or'] = OR
     ID['not'] = NOT
@@ -61,6 +62,7 @@ class PgonLexer(Lexer):
     ID['in'] = IN
     ID['range'] = RANGE
     ID['print'] = PRINT
+    ID['printnl'] = PRINTNL
     ID['strlen'] = STRLEN
     # FLOAT = r'\d+(\.\d+)?'
     # NUMBER = r'\d+'

@@ -192,7 +192,8 @@ boolvalue(bool(false))--> ['false'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT END WITH UNDERSCORE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variablename(var(Atom)) -->
     [Atom],
-    {\+ member(Atom, ['const','int','string','float','bool','true','false','if','elif','else', 'for', 'in','range','while'])},
+    {\+ member(Atom, ['const','int','string','float','bool','mod','and','or','not','print','printnl','strlen',
+        'sqrt','cbrt','sq','cube','true','false','if','elif','else', 'for', 'in','range','while'])},
     {\+number(Atom)},
     { atom_chars(Atom, [First|RestChars]) },
     { code_type(First, lower) },
