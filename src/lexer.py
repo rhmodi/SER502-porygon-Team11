@@ -110,7 +110,9 @@ def parse_arguments():
 
 def read_input_file(filename, num):
     data = None
-   
+    if (num == 1) and not(filename.endswith(".pgon")):
+        print(Constants.PRINT_RED_TEXT + "This is not a Porygon file: "+  sys.argv[1] + Constants.PRINT_NORMAL_TEXT)
+        return data
     try:
         with open(filename, "r") as input_file:
             data = input_file.read()
@@ -181,7 +183,7 @@ def passing_tree_to_prolog(content):
 if __name__ == '__main__':
     parsed_args = parse_arguments()
     input_filename = parsed_args.input[0]
-    output_filename = "program" + Constants.TOKEN_FILE_EXTENSION 
+    output_filename = "program." + Constants.TOKEN_FILE_EXTENSION 
     file_data = read_input_file(input_filename, 1)
     if(file_data != None):
         print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
