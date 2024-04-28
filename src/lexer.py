@@ -3,6 +3,8 @@ os.environ['SWI_HOME_DIR'] = 'C:\\Program Files\\swipl'
 import sys
 import argparse
 from sly import Lexer
+import ast
+import re
 
 from pyswip import Prolog
 
@@ -91,6 +93,8 @@ class PgonLexer(Lexer):
     def STRING_VALUE(self, t):
         t.value = t.value.replace('\"','')
         return t
+    
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -114,6 +118,12 @@ def read_input_file(filename, num):
         print("Reading your program: " + Constants.PRINT_GREEN_TEXT + 'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
     return data
 
+def replace_str_with_single_quotes(text):
+    # Regular expression pattern to match 'str(...)' with content inside parentheses
+    pattern = r'(str\((.*?)\))'
+    
+    # Replace 'str(...)' with content inside single quotes
+    return re.sub(pattern, lambda match: f"str('{match.group(2)}')", text)
 
 def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
@@ -144,10 +154,10 @@ def passing_tokens_to_prolog(content):
             results.append(result) 
     else :
         print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
-    print(results)
     return results
 
 def passing_tree_to_prolog(content):
+    print(content)
     prolog = Prolog()
     prolog.consult("porygonSemantics.pl")   
     results = [] 
@@ -160,6 +170,16 @@ def passing_tree_to_prolog(content):
         print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
     return results
 
+
+    
+def addquotestoString(cmd):
+        if "str(" in cmd and ")" in cmd:
+            start_idx = cmd.find("str(") + 4
+            end_idx = cmd.rfind(")")
+            content = cmd[start_idx:end_idx]
+            return cmd[:start_idx] + "'" + content + "'" + cmd[end_idx:]
+        else:
+            return cmd
 
 
 
@@ -178,8 +198,13 @@ if __name__ == '__main__':
         write_tokens_to_file(tokens, output_filename)
         data = read_input_file(output_filename, 0)
         results = passing_tokens_to_prolog(data)
+        
         tree = ''.join(results[0].get('T'))
-        final_results = passing_tree_to_prolog(tree)
+        print(type(tree)," ", tree)
+        processed_data = replace_str_with_single_quotes(tree)
+
+        # print(processed_data)
+        final_results = passing_tree_to_prolog(processed_data)
       
     except Exception as e:
              print(Constants.PRINT_RED_TEXT + "SYNTAX ERROR !!!! \nERROR: " + Constants.PRINT_NORMAL_TEXT +str(e))

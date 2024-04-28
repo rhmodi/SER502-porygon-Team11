@@ -293,6 +293,7 @@ eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
+eval_expr(str(Str), EVT, EVT, Str):- atom_string(Str).
 
 eval_expr(X,EVT,NEVT,Val):- eval_condition(X,EVT,NEVT,Val).
 
