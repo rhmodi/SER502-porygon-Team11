@@ -1,7 +1,7 @@
 # Porygon
 
 ## Prerequisite
-* Follow the instructions [here](https://www.python.org/downloads/) to download python 
+* Follow the instructions [here](https://www.python.org/downloads/) to download and install python 
 
 ## Installing Requirements
 ``` pip install sly pyswip re argparse ast```
