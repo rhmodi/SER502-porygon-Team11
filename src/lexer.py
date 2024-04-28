@@ -119,10 +119,8 @@ def read_input_file(filename, num):
     return data
 
 def replace_str_with_single_quotes(text):
-    # Regular expression pattern to match 'str(...)' with content inside parentheses
     pattern = r'(str\((.*?)\))'
     
-    # Replace 'str(...)' with content inside single quotes
     return re.sub(pattern, lambda match: f"str('{match.group(2)}')", text)
 
 def write_tokens_to_file(tokens, filename):
@@ -172,14 +170,7 @@ def passing_tree_to_prolog(content):
 
 
     
-def addquotestoString(cmd):
-        if "str(" in cmd and ")" in cmd:
-            start_idx = cmd.find("str(") + 4
-            end_idx = cmd.rfind(")")
-            content = cmd[start_idx:end_idx]
-            return cmd[:start_idx] + "'" + content + "'" + cmd[end_idx:]
-        else:
-            return cmd
+
 
 
 
