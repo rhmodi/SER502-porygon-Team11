@@ -115,7 +115,8 @@ def read_input_file(filename, num):
         with open(filename, "r") as input_file:
             data = input_file.read()
     except FileNotFoundError:
-        print("No such file exists in path:", sys.argv[1])
+        print(Constants.PRINT_RED_TEXT + "No such file exists in path: "+  sys.argv[1] + Constants.PRINT_NORMAL_TEXT)
+        return data
     if(num == 1):
         print("Reading your program: " + Constants.PRINT_GREEN_TEXT + 'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
     return data
@@ -178,25 +179,27 @@ def passing_tree_to_prolog(content):
 
 
 if __name__ == '__main__':
-    print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
     input_filename = parsed_args.input[0]
     output_filename = "program" + Constants.TOKEN_FILE_EXTENSION 
     file_data = read_input_file(input_filename, 1)
-    try:
-        lexer = PgonLexer()
-        tokens = lexer.tokenize(file_data)
-        write_tokens_to_file(tokens, output_filename)
-        data = read_input_file(output_filename, 0)
-        results = passing_tokens_to_prolog(data)
-        
-        tree = ''.join(results[0].get('T'))
-        processed_data = replace_str_with_single_quotes(tree)
+    if(file_data != None):
+        print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
 
-        final_results = passing_tree_to_prolog(processed_data)
-      
-    except Exception as e:
-             print(Constants.PRINT_RED_TEXT + "SYNTAX ERROR !!!! \nERROR: " + Constants.PRINT_NORMAL_TEXT +str(e))
+        try:
+            lexer = PgonLexer()
+            tokens = lexer.tokenize(file_data)
+            write_tokens_to_file(tokens, output_filename)
+            data = read_input_file(output_filename, 0)
+            results = passing_tokens_to_prolog(data)
+            
+            tree = ''.join(results[0].get('T'))
+            processed_data = replace_str_with_single_quotes(tree)
+
+            final_results = passing_tree_to_prolog(processed_data)
+        
+        except Exception as e:
+                print(Constants.PRINT_RED_TEXT + "SYNTAX ERROR !!!! \nERROR: " + Constants.PRINT_NORMAL_TEXT +str(e))
         
 
         
