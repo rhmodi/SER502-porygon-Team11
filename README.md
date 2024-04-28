@@ -1,7 +1,12 @@
 # Porygon
 
-## Installing SLY
-``` pip install sly pyswip ``` 
+## Prerequisite
+* Follow the instructions [here](https://www.python.org/downloads/) to download python 
+
+## Installing Requirements
+``` pip install sly pyswip re argparse ast```
+### If you are facing issues with pyswip, install master version of pyswip
+``` pip install git+https://github.com/yuce/pyswip@master ```
 
 
 ## Usage
