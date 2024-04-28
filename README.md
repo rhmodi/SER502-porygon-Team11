@@ -1,15 +1,22 @@
 # Porygon
 
+## Clone the repository  
+```git clone git@github.com:rakshil14/SER502-porygon-Team11.git```  
+```cd SER502-porygon-Team11```
+
 ## Prerequisite
 * Follow the instructions [here](https://www.python.org/downloads/) to download and install python 
 
 ## Installing Requirements
-``` pip install sly pyswip re argparse ast```
+```pip install sly pyswip re argparse ast```
 ### If you are facing issues with pyswip, install master version of pyswip
-``` pip install git+https://github.com/yuce/pyswip@master ```
+```pip install git+https://github.com/yuce/pyswip@master ```
 
 
 ## Usage
+* Change to ```src``` folder  
+```cd src ```
+* Execute the program using below command  
 ``` python lexer.py program.pgon ``` 
 
 
