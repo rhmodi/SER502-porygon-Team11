@@ -181,7 +181,7 @@ def passing_tree_to_prolog(content):
 if __name__ == '__main__':
     parsed_args = parse_arguments()
     input_filename = parsed_args.input[0]
-    output_filename = "program" + Constants.TOKEN_FILE_EXTENSION 
+    output_filename = "program." + Constants.TOKEN_FILE_EXTENSION 
     file_data = read_input_file(input_filename, 1)
     if(file_data != None):
         print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
