@@ -100,7 +100,7 @@ exponent(S) -->stringvalue(S).
 exponent(I)--> increment_operation(I).
 exponent(Dec)--> decrement_operation(Dec).
 exponent(B) --> boolcondition(B).
-
+exponent(S) --> strlen(S).
 
 square(square(S))--> ['sq'],['('],expr(S),[')'].
 squareRoot(squareroot(Sr))--> ['sqrt'],['('],expr(Sr),[')'].

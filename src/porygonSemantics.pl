@@ -111,7 +111,6 @@ eval_assign(t_const_bool_e(var(X),Y),EVT, UEVT):-
 eval_assign(t_int(var(X),Y),EVT, UEVT):-
     (   soft_look_up(X,EVT,_Val) ->  concat(X," is already defined",Z),print_message(Z),nl,halt;
     eval_expr(Y, EVT, EVT2, Num),
-    print_message("Login"),
 (integer(Num) -> true;concat("Expected int but found ",Num,Z),print_message(Z),halt),
     init_var((X,Num,int),EVT2, UEVT)).
 eval_assign(t_flt(var(X),Y),EVT, UEVT):-
@@ -287,13 +286,16 @@ eval_expr(decrement(var(Var)),EVT,NEVT,Val):-
     Val is Val1-1,
     update((Var,Val,_),EVT1,NEVT).
 
+eval_expr(stringlength(X),EVT,NEVT,Val):-
+        eval_expr(X,EVT,NEVT,Val1),
+        string_length(Val1,Val).
 %%%%%%%%%%%%%%%%%%%%%%%% eval block variable lookup %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 eval_expr(var(Var), EVT, EVT, Val):-hard_look_up(Var,EVT,Val).
 eval_expr(num(Num),  EVT, EVT, Num):- number(Num).
 eval_expr(bool(Bool), EVT, EVT, Bool):- boolean(Bool).
 eval_expr(str(Str), EVT, EVT, Str):- atom(Str).
-eval_expr(str(Str), EVT, EVT, Str):- atom_string(Str).
+% eval_expr(str(Str), EVT, EVT, Str):- atom_string(Str).
 
 eval_expr(X,EVT,NEVT,Val):- eval_condition(X,EVT,NEVT,Val).
 
@@ -434,7 +436,7 @@ eval_plaincommand(plain_decrement(X),EVT,NEVT,Val):-
 eval_plaincommand(plain_print(X),EVT,NEVT,Val):-
     eval_print(X,EVT,NEVT,Val).
 eval_plaincommand(plain_strlen(X),EVT,NEVT,Val):-
-    eval_stringlength(X,EVT,NEVT,Val).
+    eval_expr(X,EVT,NEVT,Val).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% eval block for print and stringlength %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -445,9 +447,7 @@ eval_print(printnl(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val),
     write(Val),
     nl.
-eval_stringlength(stringlength(X),EVT,NEVT,Val):-
-    eval_expr(X,EVT,NEVT,Val1),
-    string_length(Val1,Val).
+
 
 eval_blockcommand(blkcmd(X),EVT,NEVT,Val):-
     eval_blk_command(X,EVT,NEVT,Val).

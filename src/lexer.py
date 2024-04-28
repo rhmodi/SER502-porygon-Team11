@@ -119,7 +119,7 @@ def read_input_file(filename, num):
     return data
 
 def replace_str_with_single_quotes(text):
-    pattern = r'(str\((.*?)\))'
+    pattern = r'(\bstr\((.*?)\))'
     
     return re.sub(pattern, lambda match: f"str('{match.group(2)}')", text)
 
@@ -127,7 +127,6 @@ def write_tokens_to_file(tokens, filename):
     with open(filename, "w") as file:
         allTokens = []
         for token in tokens:
-            # print(type(token.type))
             if token.type == 'STRING_VALUE':
                 allTokens.append('"')
                 allTokens.append(token.value)
@@ -155,7 +154,6 @@ def passing_tokens_to_prolog(content):
     return results
 
 def passing_tree_to_prolog(content):
-    print(content)
     prolog = Prolog()
     prolog.consult("porygonSemantics.pl")   
     results = [] 
@@ -191,10 +189,8 @@ if __name__ == '__main__':
         results = passing_tokens_to_prolog(data)
         
         tree = ''.join(results[0].get('T'))
-        print(type(tree)," ", tree)
         processed_data = replace_str_with_single_quotes(tree)
 
-        # print(processed_data)
         final_results = passing_tree_to_prolog(processed_data)
       
     except Exception as e:
