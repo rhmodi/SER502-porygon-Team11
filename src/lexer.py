@@ -156,6 +156,7 @@ def passing_tokens_to_prolog(content):
             results.append(result) 
     else :
         print("Parse tree generation: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
+        exit(1)
     return results
 
 def passing_tree_to_prolog(content):
