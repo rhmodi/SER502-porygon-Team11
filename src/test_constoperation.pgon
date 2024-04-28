@@ -1,0 +1,6 @@
+{
+    const int a = 25;
+    const int b = 35;
+    const int c = a+b;
+    print(c);
+}

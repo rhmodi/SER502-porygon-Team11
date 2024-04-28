@@ -1,0 +1,28 @@
+{
+    int c;
+    int b  = 25;
+    int e = 35;
+    int d = c+b+e;
+    int f = 100-e;
+    int mul = f*25;
+    int div = mul/5;
+    float a;
+    float mult = a*2.0;
+
+     mult+= 15.0; 
+
+    c = b mod 2;
+
+    int all_arthmetic1 = (b*e)/5+100-25 mod 5;
+
+
+    printnl(d);
+    printnl(f);
+    printnl(mul);
+    printnl(div);
+    printnl(a);
+    printnl(mult);
+    printnl(c);
+    print(all_arthmetic1);
+
+}

@@ -179,7 +179,7 @@ if __name__ == '__main__':
     print(Constants.PRINT_YELLOW_TEXT + "You wrote a Porygon program!" + Constants.PRINT_NORMAL_TEXT)
     parsed_args = parse_arguments()
     input_filename = parsed_args.input[0]
-    output_filename = parsed_args.input[0][:-4:] + Constants.TOKEN_FILE_EXTENSION
+    output_filename = "program" + Constants.TOKEN_FILE_EXTENSION 
     file_data = read_input_file(input_filename, 1)
     try:
         lexer = PgonLexer()

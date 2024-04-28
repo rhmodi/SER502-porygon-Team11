@@ -214,11 +214,11 @@ eval_expr(cube(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     Val is Val1**3.
 
-eval_expr(sqrt(X),EVT,NEVT,Val):-
+eval_expr(squareroot(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     Val is Val1**(1/2).
 
-eval_expr(cbrt(X),EVT,NEVT,Val):-
+eval_expr(cuberoot(X),EVT,NEVT,Val):-
     eval_expr(X,EVT,NEVT,Val1),
     Val is Val1**(1/3).
 

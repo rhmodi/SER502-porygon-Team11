@@ -1,0 +1,18 @@
+{
+    int i;
+    for(i=0;i<10;i++)
+    {
+        if(i<3)
+        {
+            printnl("In IF");
+        }
+        elif((i>=3) and (i<=7))
+        {
+            printnl("In ELIF");
+        }
+        else
+        {
+            printnl("Else");
+        }
+    }
+}
