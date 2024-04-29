@@ -29,7 +29,7 @@ class PgonLexer(Lexer):
 
     # LITERALS
     literals = {'{', '}', '?', ';', ':', '(', ')','=',
-                '/','*','+','-','%','^','<','>',','}
+                '/','*','+','-','mod','^','<','>',','}
 
     # IGNORE
     ignore = ' \t'
@@ -77,7 +77,7 @@ class PgonLexer(Lexer):
     SUB_SHORTHAND = r'\-='
     MUL_SHORTHAND = r'\*='
     DIV_SHORTHAND = r'\/='
-    MOD_SHORTHAND = r'\%='
+    MOD_SHORTHAND = r'\mod='
     EXP_SHORTHAND = r'\^='
 
     @_(r'\d+\.\d*') # Regex if decimal point is not there FLOAT SHOULD BE ENDING WITH '.'
