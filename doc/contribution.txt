@@ -6,3 +6,10 @@ Contribution from team
 Grammar & Design - Team Discussion
 Name - Democratic vote (let us know if you want to know the list)
 
+## Milestone 2
+
+Anmol Mallikarjun Nemagouda - Design, Grammar Design Document, ppt,pdf loops in eval, initial evaluator, DCG.
+Chandrakanth Dhanunjai Chintala - Redone evaluator with hard lookup and soft lookup, debugging errors video editing, testing, readme.
+Kaumudi Degekar Kulbarga - Lexer, Grammar, Design, Evaluator, debugging, testing.
+Rakshilkumar Modi - Grammar, Design, Evaluator, debugging, script, Lexer, Error handling code, testing, test cases.
+
