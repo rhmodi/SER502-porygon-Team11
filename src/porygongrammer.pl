@@ -66,7 +66,7 @@ shorthandAssign(shassignadd(Var,Expr))--> variablename(Var),['+='],expr(Expr).
 shorthandAssign(shassignsub(Var,Expr))--> variablename(Var),['-='],expr(Expr).
 shorthandAssign(shassignmul(Var,Expr))--> variablename(Var),['*='],expr(Expr).
 shorthandAssign(shassigndiv(Var,Expr))--> variablename(Var),['/='],expr(Expr).
-shorthandAssign(shassignmod(Var,Expr))--> variablename(Var),['%='],expr(Expr).
+shorthandAssign(shassignmod(Var,Expr))--> variablename(Var),['mod='],expr(Expr).
 shorthandAssign(shassignexpo(Var,Expr))--> variablename(Var),['^='],expr(Expr).
 
 initialassignment(iassign(Var,Expr))--> variablename(Var),['='],expr(Expr).
