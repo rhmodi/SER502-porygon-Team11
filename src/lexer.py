@@ -3,7 +3,6 @@ os.environ['SWI_HOME_DIR'] = 'C:\\Program Files\\swipl'
 import sys
 import argparse
 from sly import Lexer
-import ast
 import re
 
 from pyswip import Prolog
@@ -15,7 +14,6 @@ class Constants:
     PRINT_NORMAL_TEXT = '\033[0m'
     PRINT_YELLOW_TEXT = '\033[93m'
     PRINT_RED_TEXT = '\033[91m'
-
 
 # Reference: https://sly.readthedocs.io/en/latest/sly.html
 class PgonLexer(Lexer):
@@ -64,9 +62,6 @@ class PgonLexer(Lexer):
     ID['print'] = PRINT
     ID['printnl'] = PRINTNL
     ID['strlen'] = STRLEN
-    # FLOAT = r'\d+(\.\d+)?'
-    # NUMBER = r'\d+'
-    # STRING_VALUE = r'(?:\").*(?:\")'
     INC = r'\+\+'
     DEC = r'--'
     EQ = r'=='
@@ -95,8 +90,6 @@ class PgonLexer(Lexer):
     def STRING_VALUE(self, t):
         t.value = t.value.replace('\"','')
         return t
-    
-
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -106,7 +99,6 @@ def parse_arguments():
                         nargs=1, help='Filepath to Porygon source code')
     parser.add_argument('--evaluate', action='store_true', help='Evaluate the generated tokens')
     return parser.parse_args()
-
 
 def read_input_file(filename, num):
     data = None
@@ -125,7 +117,6 @@ def read_input_file(filename, num):
 
 def replace_str_with_single_quotes(text):
     pattern = r'(\bstr\((.*?)\))'
-    
     return re.sub(pattern, lambda match: f"str('{match.group(2)}')", text)
 
 def write_tokens_to_file(tokens, filename):
@@ -142,8 +133,6 @@ def write_tokens_to_file(tokens, filename):
         
         print("Lexical analysis: " + Constants.PRINT_GREEN_TEXT +
               'SUCCESS!' + Constants.PRINT_NORMAL_TEXT)
-
-
 
 def passing_tokens_to_prolog(content):
     prolog = Prolog()
@@ -171,15 +160,6 @@ def passing_tree_to_prolog(content):
     else :
         print("Execution: "+Constants.PRINT_RED_TEXT + "FAILED :(" + Constants.PRINT_NORMAL_TEXT)
     return results
-
-
-    
-
-
-
-
-
-
 
 if __name__ == '__main__':
     parsed_args = parse_arguments()
@@ -215,4 +195,5 @@ if __name__ == '__main__':
     
 
 
-    
+
+

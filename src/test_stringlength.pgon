@@ -1,8 +1,6 @@
 {
-    
     string s = "raks";
     strlen(s);
-    strlen("kmd");
+    print(strlen("kmd"));
     print(s);
-
 }

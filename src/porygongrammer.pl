@@ -13,17 +13,12 @@ decls(D)--> constassign(D).
 decls(D)--> declassign(D).
 decls(D)--> plainassign(D).
 
-%constassign(t_const_int(C,N)) --> ['const'], ['int'], variablename(C),['='],num(N).
-%constassign(t_const_str(C,S)) --> ['const'], ['string'], variablename(C),['='],stringvalue(S).
-%constassign(t_const_bool(C,B)) --> ['const'], ['bool'], variablename(C),['='],boolvalue(B).
 constassign(t_const_flt(C,F)) --> ['const'], ['float'], variablename(C),['='],floatvalue(F).
 constassign(t_const_int_e(C,Expr)) --> ['const'], ['int'], variablename(C),['='],expr(Expr).
 constassign(t_const_str_e(C,Expr)) --> ['const'], ['string'], variablename(C),['='],expr(Expr).
 constassign(t_const_bool_e(C,Expr)) --> ['const'], ['bool'], variablename(C),['='],expr(Expr).
 constassign(t_const_flt_e(C,Expr)) --> ['const'], ['float'], variablename(C),['='],expr(Expr).
 
-%declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],stringvalue(Value).
-%declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],boolvalue(Value).
 declassign(t_int(Var,Value)) --> ['int'], variablename(Var),['='],expr(Value).
 declassign(t_str(Var,Value)) --> ['string'], variablename(Var),['='],expr(Value).
 declassign(t_bool(Var,Value)) --> ['bool'], variablename(Var),['='],expr(Value).
@@ -73,7 +68,6 @@ initialassignment(iassign(Var,Expr))--> variablename(Var),['='],expr(Expr).
 
 % EXPRESSIONS STARTS HERE
 
-% Change in grammer make it left recursive
 expr(addition(X,Y))--> expr(X),['+'],term(Y).
 expr(subtraction(X,Y))--> expr(X),['-'],term(Y).
 expr(X)--> term(X).
@@ -116,7 +110,6 @@ and_condition(X) --> condition(X).
 condition(not(X))--> ['not'],condition(X).
 condition(X)--> ['('],boolcondition(X),[')'].
 condition(InitAssign) --> initialassignment(InitAssign).
-%condition(not(Expression))--> ['not'], expr(Expression).
 condition(equivalance(Expr1,Expr2))--> expr(Expr1),['=='],expr(Expr2).
 condition(notequalsto(Expr1,Expr2))--> expr(Expr1),['!='],expr(Expr2).
 condition(lessthan(Expr1,Expr2))--> expr(Expr1),['<'],expr(Expr2).
@@ -141,7 +134,6 @@ whilecommand(while(Condition,C))--> ['while'],['('],boolcondition(Condition), ['
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],assignment(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
-%forcommand(for(Assign,BoolCondition,Valupdation,C))--> ['for'],['('],declassign(Assign),[';'],boolcondition(BoolCondition),[';'],variableupdation(Valupdation),[')'],['{'],commandlist(C),['}'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% variable updation%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 variableupdation((Ops))--> increment_operation(Ops).
 variableupdation((Ops))--> decrement_operation(Ops).
@@ -161,7 +153,6 @@ range(Range)--> num(Range).
 
 %%%%%%%%%%%%check before pushing%%%%%%%%%%%%%% Terenary Statement%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ternary(ternary(Bool,Expr1,Expr2))-->['('], boolcondition(Bool),[')'],['?'],expr(Expr1),[':'],expr(Expr2).
-%ternary(ternary(Bool,C1,C2))--> boolcondition(Bool),['?'],['{'],commandlist(C1),['}'],[':'],['{'],commandlist(C2),['}'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% PRINT STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 printStmt(print(Print))--> ['print'],['('],expr(Print),[')'].
@@ -173,7 +164,6 @@ strlen(stringlength(Strlen)) --> ['strlen'],['('],stringvalue(Strlen),[')'].
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRING VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 stringvalue(str(Str))--> ['\"'],[Str],['\"'].
 stringvalue((Str))--> variablename(Str).
-%stringvalue(string(Str))--> ['\"'],['\"'].
 % LEXER is handling it
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FLOAT VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -182,8 +172,6 @@ floatvalue(N)--> num(N).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOOLEAN VALUE DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 boolvalue(bool(true))--> ['true'].
 boolvalue(bool(false))--> ['false'].
-%boolvalue(bool(X))-->  num(X). % 0 for false and 1 for true (check this again).
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLE NAME DEFINITION STATEMENT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%% VAR NAME SHOULD NOT START WITH A LOWERCASE LETTER%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -220,10 +208,3 @@ num(num(Num)) --> [Num],{number(Num)}.
 %uppercase_letter(Upper) --> {member(Upper, ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'])}.
 %digit(Digit) --> {member(Digit, [0,1,2,3,4,5,6,7,8,9])}.
 %special_char(Special) --> {member(Special,  ['!','@','#','$','%','^','&','*','(',')','_','-','+','=','{','}','',']','|',':',';','"','<','>',',','.','?','/'])}.
-
-
-
-
-
-
-% evaluator(T,V):- block(P,T,[]),eval_block(P,[[],[]],NEVT,V).
