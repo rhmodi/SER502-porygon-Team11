@@ -245,11 +245,7 @@ eval_expr(shassigndiv(var(X),Y), EVT, NEVT, Val):-
     eval_expr(division(num(Val1),num(Val2)),EVT1,EVT2,Val),
     update((X,Val,_),EVT2,NEVT).
 
-eval_expr(shassignmod(var(X),Y), EVT, NEVT, Val):-
-    hard_look_up(X,EVT,Val1),
-    eval_expr(Y,EVT,EVT1,Val2),
-    eval_expr(modulus(num(Val1),num(Val2)),EVT1,EVT2,Val),
-    update((X,Val,_),EVT2,NEVT).
+
 
 eval_expr(shassignexpo(var(X),Y), EVT, NEVT, Val):-
     hard_look_up(X,EVT,Val1),

@@ -23,11 +23,11 @@ class PgonLexer(Lexer):
               CONST, INT, STRING_KEYWORD, BOOL, FLOAT_KEYWORD,
               SQRT, CBRT, SQ, CUBE, AND, OR, NOT, TRUE, FALSE,
               IF, ELSE, ELIF, FOR, IN, RANGE, WHILE, PRINT, STRLEN,
-              ADD_SHORTHAND, SUB_SHORTHAND, MUL_SHORTHAND, DIV_SHORTHAND, MOD_SHORTHAND, EXP_SHORTHAND}
+              ADD_SHORTHAND, SUB_SHORTHAND, MUL_SHORTHAND, DIV_SHORTHAND, EXP_SHORTHAND}
 
     # LITERALS
     literals = {'{', '}', '?', ';', ':', '(', ')','=',
-                '/','*','+','-','mod','^','<','>',','}
+                '/','*','+','-','%','^','<','>',','}
 
     # IGNORE
     ignore = ' \t'
@@ -72,7 +72,6 @@ class PgonLexer(Lexer):
     SUB_SHORTHAND = r'\-='
     MUL_SHORTHAND = r'\*='
     DIV_SHORTHAND = r'\/='
-    MOD_SHORTHAND = r'\mod='
     EXP_SHORTHAND = r'\^='
 
     @_(r'\d+\.\d*') # Regex if decimal point is not there FLOAT SHOULD BE ENDING WITH '.'
@@ -90,6 +89,7 @@ class PgonLexer(Lexer):
     def STRING_VALUE(self, t):
         t.value = t.value.replace('\"','')
         return t
+    
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
