@@ -30,4 +30,7 @@ Team Members
 
 # Acknowledgments
 * Dr. Ajay Bansal
+* James Smith
 
+# Youtube Link
+* https://youtu.be/wy4qvgNlQcw?feature=shared
