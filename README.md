@@ -1,5 +1,10 @@
 # Porygon
 
+> **License Notice**  
+> All rights to this repository are reserved by the original contributors.  
+> This repository is made public **solely for academic evaluation, portfolio presentation, and demonstration purposes**.  
+> Copying, forking, redistribution, or reuse of this code in any form is **strictly prohibited** without prior written permission from the contributors.
+
 ## Clone the repository  
 ```git clone git@github.com:rakshil14/SER502-porygon-Team11.git```  
 ```cd SER502-porygon-Team11```
@@ -34,3 +39,15 @@ Team Members
 
 # Youtube Link
 * https://youtu.be/wy4qvgNlQcw?feature=shared
+
+
+## License
+
+This project is **not open-source**.  
+All rights are reserved by the original contributors. No license is granted for copying, modification, distribution, or reuse.
+
+The repository is made public only for academic demonstration and evaluation.  
+Unauthorized use, including but not limited to forking, downloading, or reusing code for academic submissions or commercial purposes, is strictly prohibited.
+
+For permissions, contact: [rhmodi@asu.edu](mailto:rhmodi@asu.edu)
+
